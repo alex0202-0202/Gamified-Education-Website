@@ -190,3 +190,21 @@ Known technical follow-ups:
 - Replace SVG-only assembly preview with a true Three.js model when exact 3D cut-outs are required.
 - Add DXF export for laser cutters.
 - Continue backend privacy work before production school deployment.
+
+## Version History
+
+The project version history is maintained in `CHANGELOG.md`.
+
+Current documentation version:
+
+- `0.3.0-school-ready-additive`
+
+Use the changelog to record:
+
+- new curriculum content
+- game/question bank updates
+- Design Technology tool additions
+- bug fixes
+- security/privacy changes
+- known limitations
+- deployment-readiness notes
