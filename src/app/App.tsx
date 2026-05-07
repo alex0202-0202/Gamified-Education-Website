@@ -19,9 +19,6 @@ import { IBResourceHub } from './components/IBResourceHub';
 import { IBSubtopicDetail } from './components/IBSubtopicDetail';
 import { IBResourceDetail } from './components/IBResourceDetail';
 import { ProjectHub } from './components/ProjectHub';
-import { OrthographicProjectionPanel } from '../features/cad-learning/OrthographicProjectionPanel';
-import { JoiningMethodsPanel } from '../features/materials-joining/JoiningMethodsPanel';
-import { FingerJointBoxMakerPanel } from '../features/box-maker/FingerJointBoxMakerPanel';
 import {
   DATCaseStudiesPage,
   DATSbaSupportPage,
@@ -42,6 +39,9 @@ import type { SeniorModuleId } from './data/seniorModules';
 
 const FunLearning = lazy(() => import('./components/FunLearning').then((module) => ({ default: module.FunLearning })));
 const DrivingGame = lazy(() => import('./components/DrivingGame').then((module) => ({ default: module.DrivingGame })));
+const OrthographicProjectionPanel = lazy(() => import('../features/cad-learning/OrthographicProjectionPanel').then((module) => ({ default: module.OrthographicProjectionPanel })));
+const JoiningMethodsPanel = lazy(() => import('../features/materials-joining/JoiningMethodsPanel').then((module) => ({ default: module.JoiningMethodsPanel })));
+const FingerJointBoxMakerPanel = lazy(() => import('../features/box-maker/FingerJointBoxMakerPanel').then((module) => ({ default: module.FingerJointBoxMakerPanel })));
 
 function AppContent() {
   const { user } = useAuth();
@@ -113,11 +113,23 @@ function AppContent() {
       case 'project_hub':
         return <ProjectHub onNavigate={handleNavigate} />;
       case 'orthographic_projection':
-        return <OrthographicProjectionPanel onNavigate={handleNavigate} />;
+        return (
+          <Suspense fallback={<div className="text-sm text-[#8C857B]">Loading CAD learning panel...</div>}>
+            <OrthographicProjectionPanel onNavigate={handleNavigate} />
+          </Suspense>
+        );
       case 'joining_methods':
-        return <JoiningMethodsPanel onNavigate={handleNavigate} />;
+        return (
+          <Suspense fallback={<div className="text-sm text-[#8C857B]">Loading joining methods...</div>}>
+            <JoiningMethodsPanel onNavigate={handleNavigate} />
+          </Suspense>
+        );
       case 'finger_joint_box_maker':
-        return <FingerJointBoxMakerPanel onNavigate={handleNavigate} />;
+        return (
+          <Suspense fallback={<div className="text-sm text-[#8C857B]">Loading 榫接 Box Maker...</div>}>
+            <FingerJointBoxMakerPanel onNavigate={handleNavigate} />
+          </Suspense>
+        );
       case 'fun_learning':
         return (
           <Suspense fallback={<div className="text-sm text-[#8C857B]">Loading Design Technology practice...</div>}>

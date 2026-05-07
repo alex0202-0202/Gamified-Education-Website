@@ -20,6 +20,8 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
   const [dimensions, setDimensions] = useState({ width: 80, depth: 60, height: 50 });
   const [rotation, setRotation] = useState(0);
   const [cutPosition, setCutPosition] = useState(50);
+  const [extrudedShapeId, setExtrudedShapeId] = useState<string | undefined>('shape-1');
+  const [extrudeMessage, setExtrudeMessage] = useState('');
   const [shapes, setShapes] = useState<CadShape[]>([
     { id: 'shape-1', type: 'rectangle', x: 120, y: 110, width: 120, height: 80 },
     { id: 'shape-2', type: 'circle', x: 300, y: 100, width: 80, height: 80 },
@@ -27,6 +29,7 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
   ]);
 
   const selectedShape = shapes.find((shape) => shape.id === selectedShapeId);
+  const extrudedShape = shapes.find((shape) => shape.id === extrudedShapeId) ?? selectedShape;
   const activeGuide = useMemo(() => orthographicViewGuides.find((view) => view.id === activeView) ?? orthographicViewGuides[0], [activeView]);
 
   const addShape = (type: CadShapeType) => {
@@ -47,7 +50,12 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
 
   const deleteSelected = () => {
     setShapes((current) => current.filter((shape) => shape.id !== selectedShapeId));
+    if (extrudedShapeId === selectedShapeId) setExtrudedShapeId(undefined);
     setSelectedShapeId(undefined);
+  };
+
+  const updateShape = (id: string, patch: Partial<CadShape>) => {
+    setShapes((current) => current.map((shape) => (shape.id === id ? { ...shape, ...patch } : shape)));
   };
 
   const updateDimension = (key: 'width' | 'depth' | 'height', value: number) => {
@@ -85,10 +93,11 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
           onToolChange={setTool}
           onAddShape={addShape}
           onSelectShape={setSelectedShapeId}
+          onUpdateShape={updateShape}
           onDeleteSelected={deleteSelected}
         />
         <ModelPreview3D
-          selectedShape={selectedShape}
+          selectedShape={extrudedShape}
           activeView={activeView}
           width={dimensions.width}
           depth={dimensions.depth}
@@ -133,9 +142,21 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
               />
             </label>
           ))}
-          <button type="button" className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#6B9080] px-4 py-2 text-sm font-bold text-white">
+          <button
+            type="button"
+            onClick={() => {
+              if (!selectedShapeId) {
+                setExtrudeMessage('Select or create a 2D profile first.');
+                return;
+              }
+              setExtrudedShapeId(selectedShapeId);
+              setExtrudeMessage('Selected profile is now active in the 3D extrusion preview.');
+            }}
+            className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#6B9080] px-4 py-2 text-sm font-bold text-white"
+          >
             <Box className="h-4 w-4" /> Extrude selected profile
           </button>
+          {extrudeMessage && <p className="mt-3 rounded-lg bg-[#F9F8F6] p-3 text-xs leading-5 text-[#8C857B]">{extrudeMessage}</p>}
         </article>
       </section>
 

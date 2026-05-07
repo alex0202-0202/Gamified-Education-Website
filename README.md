@@ -166,6 +166,11 @@ It supports:
 - synced panel editor for circle holes, rectangles, rounded rectangles, slots, lines, and text
 - cut, engrave, and score modes
 - shape placement warnings
+- selected-shape numeric editing and duplication
+- true Three.js / React Three Fiber 3D assembly preview
+- mouse-controlled 360 degree rotate, zoom, and pan
+- assembled, exploded, joint-highlight, and x-ray display modes
+- visible panel thickness and visual 榫接 tab/slot markers
 - isometric and exploded assembly preview
 - view rotation and reset controls
 - curved cardboard / living hinge SVG generator
@@ -174,12 +179,19 @@ It supports:
 Main files:
 
 - `src/features/box-maker/FingerJointBoxMakerPanel.tsx`
+- `src/features/box-maker/BoxAssembly3DView.tsx`
+- `src/features/box-maker/boxProjectModel.ts`
+- `src/features/box-maker/assemblyTransforms.ts`
+- `src/features/box-maker/boxGeometry3D.ts`
+- `src/features/box-maker/panelMeshFactory.ts`
+- `src/features/box-maker/dxfExport.ts`
 - `src/data/design-skills/fingerJointBoxMaker.ts`
 - `src/data/questionBanks/design-skills/fingerJointBoxQuestions.ts`
 
 Current limitation:
 
-- The assembly view is an SVG-based isometric preview, not a real Three.js mesh with boolean cut-through geometry.
+- The real 3D assembly preview shows cut-outs as surface markings. True CSG / boolean cut-through geometry is planned.
+- The original SVG-based isometric preview is still kept as a fallback and exportable teaching view.
 - DXF, STL, OBJ, and 3MF export are not implemented yet.
 - Clone-from-file import is listed as a planned workflow only.
 
@@ -395,7 +407,7 @@ Deploy the generated `dist/` folder only after setting environment variables and
 
 1. Add React Router or route-level navigation for deep links.
 2. Lazy-load heavy modules and games to reduce the main bundle.
-3. Replace SVG-only Box Maker assembly preview with true Three.js geometry.
+3. Add true boolean cut-through geometry for Box Maker holes in the 3D preview.
 4. Add DXF export for laser cutters.
 5. Add Supabase Auth, tables, and RLS policies.
 6. Reduce lint warnings in legacy files.

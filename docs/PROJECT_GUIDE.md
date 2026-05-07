@@ -78,13 +78,19 @@ The Box Maker is an additive shared Design Technology tool. It supports:
 - synced panel editor for circle holes, rectangles, rounded rectangles, slots, lines, and text
 - cut, engrave, and score operations
 - safe editable area warnings
+- selected-shape numeric editing and duplication
+- true Three.js / React Three Fiber 3D assembly preview
+- 360 degree orbit rotation, zoom, and pan
+- assembled, exploded, joint-highlight, and x-ray display modes
+- visible panel thickness and visual tab/slot markers
 - isometric / exploded assembly preview
 - view rotation and reset controls
 - curved cardboard / living hinge SVG generator with straight, wave, cross, rounded slot, and honeycomb patterns
 
 Current limitation:
 
-- The assembly preview is SVG-based isometric projection, not a full Three.js mesh with real boolean cut-through geometry.
+- The true 3D assembly preview currently shows cut-outs as surface markings. Real boolean cut-through geometry is planned.
+- The SVG-based isometric projection remains as a lightweight fallback and exportable teaching view.
 - DXF, STL, OBJ, and 3MF export are planned but not implemented.
 - Clone-from-file import is listed as a planned workflow only.
 

@@ -2,6 +2,54 @@
 
 All notable project changes are summarized here.
 
+## 0.3.2-cad-boxmaker-3d - 2026-05-07
+
+### Added
+
+- React Three Fiber / Three.js dependencies for real 3D educational previews.
+- True 360 degree Box Maker assembly preview with:
+  - OrbitControls mouse rotation, zoom, and pan
+  - assembled and exploded modes
+  - joint highlight and x-ray display modes
+  - visible panel thickness
+  - visual tab/slot markers for 榫接 teaching
+  - selected-panel highlighting
+  - surface markings for panel cut-outs, slots, score lines, engravings, and text
+- Shared Box Maker geometry/model files:
+  - `boxProjectModel.ts`
+  - `assemblyTransforms.ts`
+  - `boxGeometry3D.ts`
+  - `panelMeshFactory.ts`
+  - `dxfExport.ts`
+- DXF export status module so the UI states that DXF is planned without offering a broken download.
+
+### Improved
+
+- Finger Joint Box Maker now keeps the existing SVG/isometric assembly preview as a fallback while adding the true 3D preview as an enhancement.
+- Box Maker SVG metadata now includes box type, joint type, fit mode, and dimensions.
+- Box Maker panel shapes can be selected, edited numerically, duplicated, deleted, and reflected in SVG export and the 3D preview.
+- Orthographic Projection / Beginner CAD workspace now supports:
+  - rectangle, circle, rounded rectangle, slot, and line tools
+  - selected-shape move
+  - selected-shape resize handle
+  - numeric X/Y/width/height editing
+  - functional "Extrude selected profile" button
+  - true Three.js extrusion preview with orbit controls
+- Design-skill panels are lazy-loaded from the app router to reduce initial dashboard cost.
+- Fun Learning Hub now disables quiz/flashcard start buttons for empty filters and shows friendly empty states.
+- Driving Game phase updates are now callback-stable, RAF cleanup is safer, restart cancels existing animation frames, and acceleration input now affects speed smoothly.
+
+### Preserved
+
+- Existing dashboard, login flow, curriculum sections, Fun Learning Hub, Driving Game, XP/progress state, Box Maker SVG export, joining-method content, and existing data.
+
+### Known Limitations
+
+- 3D cut-outs are currently visual surface markings; SVG export remains the exact laser-cut source. True CSG/boolean holes are planned.
+- DXF, STL, OBJ, 3MF, and clone-from-file import remain planned.
+- Production build still has a large main chunk from existing dependencies and app structure.
+- Lint still reports existing warnings in legacy files.
+
 ## 0.3.1-ui-polish - 2026-05-07
 
 ### Added

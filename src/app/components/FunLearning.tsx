@@ -1149,8 +1149,14 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                   {!studentName.trim() && (
                     <p className="text-[10px] text-[#A8A29A]">{t('填寫姓名後成績將自動儲存至班級成績冊', 'Enter your name to save your score to the gradebook')}</p>
                   )}
+                  {activeQuizQuestions.length === 0 && (
+                    <p className="rounded-lg bg-[#F9F8F6] p-3 text-xs leading-5 text-[#8C857B]">
+                      {t('此篩選暫時未有題目。請嘗試其他主題或年級。', 'No questions available for this filter yet. Try another topic or year group.')}
+                    </p>
+                  )}
                   <button onClick={() => setQuizPlaying(true)}
-                    className="w-full py-3 bg-[#D5896F] text-white rounded-xl font-bold text-sm hover:bg-[#C4785E] transition-colors flex items-center justify-center gap-2">
+                    disabled={activeQuizQuestions.length === 0}
+                    className="w-full py-3 bg-[#D5896F] text-white rounded-xl font-bold text-sm hover:bg-[#C4785E] transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-45">
                     <Zap className="w-4 h-4" /> {t('開始挑戰', 'Start Challenge')} · {activeQuizQuestions.length} {t('題', 'Q')}
                   </button>
                 </div>
@@ -1236,10 +1242,18 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                   </button>
                 </div>
               ) : (
-                <button onClick={() => setFlashPlaying(true)}
-                  className="w-full py-3 bg-[#6B9080] text-white rounded-xl font-bold text-sm hover:bg-[#5A7A6F] transition-colors flex items-center justify-center gap-2">
-                  <BookOpen className="w-4 h-4" /> {t('開始練習', 'Start Practising')} · {activeFlashCards.length} {t('張', 'cards')}
-                </button>
+                <>
+                  {activeFlashCards.length === 0 && (
+                    <p className="mb-3 rounded-lg bg-[#F9F8F6] p-3 text-xs leading-5 text-[#8C857B]">
+                      {t('此篩選暫時未有閃卡。請嘗試其他主題或年級。', 'No flashcards available for this filter yet. Try another topic or year group.')}
+                    </p>
+                  )}
+                  <button onClick={() => setFlashPlaying(true)}
+                    disabled={activeFlashCards.length === 0}
+                    className="w-full py-3 bg-[#6B9080] text-white rounded-xl font-bold text-sm hover:bg-[#5A7A6F] transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-45">
+                    <BookOpen className="w-4 h-4" /> {t('開始練習', 'Start Practising')} · {activeFlashCards.length} {t('張', 'cards')}
+                  </button>
+                </>
               )}
             </div>
           </div>

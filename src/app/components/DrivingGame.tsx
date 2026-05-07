@@ -839,7 +839,10 @@ export const DrivingGame = ({ onBack }: Props) => {
   // ── Game phase ─────────────────────────────────────────────────────────────
   const [phase, setPhase] = useState<'start' | 'playing' | 'question' | 'end'>('start');
   const phaseRef = useRef<'start' | 'playing' | 'question' | 'end'>('start');
-  const setPhaseSync = (p: typeof phase) => { phaseRef.current = p; setPhase(p); };
+  const setPhaseSync = useCallback((nextPhase: typeof phaseRef.current) => {
+    phaseRef.current = nextPhase;
+    setPhase(nextPhase);
+  }, []);
 
   // ── Question overlay ───────────────────────────────────────────────────────
   const [currentQ, setCurrentQ] = useState<QuestionData | null>(null);
@@ -970,7 +973,7 @@ export const DrivingGame = ({ onBack }: Props) => {
     setCurrentQ(q);
     setAnswered(null);
     setPhaseSync('question');
-  }, []);
+  }, [setPhaseSync]);
 
   const handleAnswer = useCallback((idx: number) => {
     if (answered !== null || !currentQ) return;
@@ -987,7 +990,7 @@ export const DrivingGame = ({ onBack }: Props) => {
       setAnswered(null);
       setPhaseSync('playing');
     }, 1400);
-  }, [answered, currentQ, addXp, spawnParticles]);
+  }, [answered, currentQ, addXp, setPhaseSync, spawnParticles]);
 
   // ── Drawing helpers ───────────────────────────────────────────────────────
 
@@ -1207,6 +1210,7 @@ export const DrivingGame = ({ onBack }: Props) => {
 
   const startGame = useCallback(() => {
     // Reset everything
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     scoreRef.current        = 0;
     timeRef.current         = GAME_DURATION;
     boostFuelRef.current    = 0;
@@ -1234,13 +1238,14 @@ export const DrivingGame = ({ onBack }: Props) => {
     lastTimeRef.current     = performance.now();
     hudTimerRef.current     = 0;
     questionQueueRef.current = [...DT_QUESTIONS].sort(() => Math.random() - 0.5);
+    keysRef.current = { left: false, right: false, accel: false };
     setHudScore(0);
     setHudTime(GAME_DURATION);
     setHudBoost(0);
     setHudXp(0);
     setBoostActive(false);
     setPhaseSync('playing');
-  }, []);
+  }, [setPhaseSync]);
 
   // ── The RAF loop ──────────────────────────────────────────────────────────
 
@@ -1269,7 +1274,8 @@ export const DrivingGame = ({ onBack }: Props) => {
 
       // ── Speed ramp ──────────────────────────────────────────────────────
       const baseSpeed = 180 + (GAME_DURATION - timeRef.current) * 1.2;
-      speedRef.current = boostActiveRef.current ? baseSpeed * 2.2 : baseSpeed;
+      const targetSpeed = baseSpeed * (keysRef.current.accel ? 1.28 : 1) * (boostActiveRef.current ? 2.2 : 1);
+      speedRef.current += (targetSpeed - speedRef.current) * Math.min(1, dt * 5.5);
 
       // ── Boost timer ─────────────────────────────────────────────────────
       if (boostActiveRef.current) {
@@ -1427,8 +1433,10 @@ export const DrivingGame = ({ onBack }: Props) => {
     };
 
     rafRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [phase, addXp, drawCoin, drawFuel, drawObstacle, drawParticles, drawPlayer, drawRoad, isEnglish, showQuestion, spawnCoin, spawnFuel, spawnObstacle, spawnParticles]);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [phase, drawCoin, drawFuel, drawObstacle, drawParticles, drawPlayer, drawRoad, isEnglish, setPhaseSync, showQuestion, spawnCoin, spawnFuel, spawnObstacle, spawnParticles]);
 
   // ─── Render ──────────────────────────────────────────────────────────────
 
