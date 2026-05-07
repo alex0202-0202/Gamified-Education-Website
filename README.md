@@ -18,7 +18,7 @@ The platform is intentionally **not** a general ICT, coding, robotics, or multi-
 
 ## Project Status
 
-Current version: `0.3.0-school-ready-additive`
+Current version: `0.3.1-ui-polish`
 
 Current deployment stage: local Vite development build, suitable for curriculum review and school-demo testing.
 
@@ -370,6 +370,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 Short summary:
 
+- `0.3.1`: Student-facing UI polish for login, dashboard, navigation, quick access and responsive layout.
 - `0.3.0`: GitHub-ready documentation, synced Finger Joint Box Maker panel editor, SVG assembly preview, expanded shared Design Technology tools.
 - `0.2.0`: IB / EDB / HKDSE curriculum data additions and question bank expansion.
 - `0.1.0`: Original gamified education website base with dashboard, modules, games, XP, progress, and demo login.

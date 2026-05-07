@@ -2,6 +2,39 @@
 
 All notable project changes are summarized here.
 
+## 0.3.1-ui-polish - 2026-05-07
+
+### Added
+
+- More welcoming two-column login screen with clear Design Technology identity.
+- Login feature highlights for curriculum pathways, portfolio work, maker tools, and practice games.
+- Student dashboard hero with learning-path explanation.
+- Dashboard quick access cards for:
+  - Project Portfolio
+  - Practice Games
+  - Orthographic / CAD
+  - Joining Methods
+- Dashboard summary metrics for modules, periods, and progress.
+- Stronger XP progress card with circular and linear progress indicators.
+- Step labels on junior DT module cards.
+
+### Improved
+
+- Sidebar labels are clearer and less technical.
+- Resource labels no longer use vague "Add-on" wording.
+- Design tools are separated visually in the sidebar.
+- Layout now behaves better on tablet and narrow screens.
+- Main header wraps more safely and avoids cramped controls.
+- Module cards are semantic buttons with visible focus states.
+
+### Preserved
+
+- Existing navigation state.
+- Existing curriculum data.
+- Existing dashboard functions.
+- Existing login behavior.
+- Existing games, scoring, XP, and progress logic.
+
 ## 0.3.0-school-ready-additive - 2026-05-07
 
 ### Added
@@ -134,4 +167,3 @@ All notable project changes are summarized here.
 - Demo login flow.
 - Teacher/admin-related UI areas.
 - Initial curriculum and module data.
-

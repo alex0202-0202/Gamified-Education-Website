@@ -197,7 +197,7 @@ The project version history is maintained in `CHANGELOG.md`.
 
 Current documentation version:
 
-- `0.3.0-school-ready-additive`
+- `0.3.1-ui-polish`
 
 Use the changelog to record:
 

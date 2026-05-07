@@ -205,7 +205,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
     hkdse_thematic_resources: 'DAT 主題式學與教資源',
     hkdse_case_studies: 'DAT 個案研究',
     hkdse_sba_support: 'DAT SBA Support',
-    edb_junior_dt: 'S1-S3 DT Add-on Summary',
+    edb_junior_dt: 'S1-S3 DT Learning Resources',
     ib_myp_design: 'IB MYP Design Y6-Y10',
     ib_current_2026: 'IB Current / Last-Assessment 2026',
     ib_new_2027: 'IB New / First-Assessment 2027',
@@ -244,10 +244,10 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
           : t('IB 文憑課程 · Design Technology', 'IB Diploma · Design Technology');
 
   return (
-    <div className="flex h-screen bg-[#F9F8F6] text-[#4A4741] overflow-hidden font-sans selection:bg-[#D5896F] selection:text-white">
+    <div className="flex h-screen flex-col bg-[#F9F8F6] text-[#4A4741] overflow-hidden font-sans selection:bg-[#D5896F] selection:text-white lg:flex-row">
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-[#E5E0D8] flex flex-col shadow-sm z-20">
-        <div className="p-8 border-b border-[#E5E0D8] bg-[#FDFCFB]">
+      <aside className="z-20 flex max-h-[46vh] w-full shrink-0 flex-col border-b border-[#E5E0D8] bg-white shadow-sm lg:h-screen lg:max-h-none lg:w-80 lg:border-b-0 lg:border-r">
+        <div className="border-b border-[#E5E0D8] bg-[#FDFCFB] p-4 lg:p-6">
           <div className="flex items-center space-x-2 text-[#D5896F] mb-2">
             <GraduationCap className="w-6 h-6" />
             <span className="text-xs font-bold uppercase tracking-widest">{t('IB + HKDSE 設計科技', 'IB + HKDSE Design Technology')}</span>
@@ -259,7 +259,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
         </div>
 
         {/* Level Selector */}
-        <div className="px-6 py-4 border-b border-[#E5E0D8]">
+        <div className="border-b border-[#E5E0D8] px-4 py-3 lg:px-5">
           <div className="flex bg-[#F2EFE9] p-1 rounded-lg flex-wrap gap-1">
             {(['S1', 'S2', 'S3', 'S4_S6', 'IB'] as const).map((level) => (
               <button
@@ -289,9 +289,9 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
           </div>
         </div>
 
-        <nav className="flex-1 p-6 overflow-y-auto">
+        <nav className="flex-1 overflow-y-auto p-4 lg:p-5">
           {navGroups.map((group, idx) => (
-            <div key={idx} className="mb-6">
+            <div key={idx} className="mb-5">
               <div className="text-xs font-bold text-[#A8A29A] uppercase mb-2 px-3 tracking-wider">
                 {tr(group.title)}
               </div>
@@ -344,12 +344,12 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                     <span>{t('IB 資源中心', 'IB Resource Library')}</span>
                   </button>
                   {[
-                    { id: 'ib_myp_design', label: t('IB MYP 設計補充', 'IB MYP Design Add-on'), icon: GraduationCap, color: 'text-[#6B9080]' },
-                    { id: 'ib_current_2026', label: t('IB 2026 課程補充', 'IB 2026 Course Add-on'), icon: BookOpen, color: 'text-[#D5896F]' },
-                    { id: 'ib_new_2027', label: t('IB 2027 課程補充', 'IB 2027 Course Add-on'), icon: Globe, color: 'text-[#6B9080]' },
-                    { id: 'ib_ia_support', label: t('IB IA 支援補充', 'IB IA Support Add-on'), icon: Award, color: 'text-[#CCA068]' },
-                    { id: 'ib_case_studies', label: t('IB 個案補充', 'IB Case Study Add-on'), icon: Layers, color: 'text-[#7B8FA1]' },
-                    { id: 'ib_research_for_design', label: t('設計研究補充', 'Research Add-on'), icon: User, color: 'text-[#8A9A5B]' },
+                    { id: 'ib_myp_design', label: t('IB MYP 設計', 'IB MYP Design'), icon: GraduationCap, color: 'text-[#6B9080]' },
+                    { id: 'ib_current_2026', label: t('IB DP 2026 課程', 'IB DP 2026 Course'), icon: BookOpen, color: 'text-[#D5896F]' },
+                    { id: 'ib_new_2027', label: t('IB DP 2027 課程', 'IB DP 2027 Course'), icon: Globe, color: 'text-[#6B9080]' },
+                    { id: 'ib_ia_support', label: t('IB IA 專題支援', 'IB IA Project Support'), icon: Award, color: 'text-[#CCA068]' },
+                    { id: 'ib_case_studies', label: t('IB 個案研究', 'IB Case Studies'), icon: Layers, color: 'text-[#7B8FA1]' },
+                    { id: 'ib_research_for_design', label: t('設計研究方法', 'Research for Design'), icon: User, color: 'text-[#8A9A5B]' },
                   ].map((resource) => {
                     const Icon = resource.icon;
                     return (
@@ -406,13 +406,13 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                       )}
                     >
                       <GraduationCap className="w-5 h-5 flex-shrink-0 text-[#6B9080]" />
-                      <span>{t('S1-S3 DT 補充', 'S1-S3 DT Add-on')}</span>
+                      <span>{t('S1-S3 DT 學習資源', 'S1-S3 DT Resources')}</span>
                     </button>
                   )}
                   {selectedLevel === 'S4_S6' && [
-                    { id: 'hkdse_thematic_resources', label: t('DAT 主題資源補充', 'DAT Thematic Add-on'), icon: Layers, color: 'text-[#D5896F]' },
-                    { id: 'hkdse_case_studies', label: t('DAT 個案補充', 'DAT Case Study Add-on'), icon: BookOpen, color: 'text-[#6B9080]' },
-                    { id: 'hkdse_sba_support', label: t('DAT SBA 支援補充', 'DAT SBA Support Add-on'), icon: Award, color: 'text-[#CCA068]' },
+                    { id: 'hkdse_thematic_resources', label: t('DAT 主題式資源', 'DAT Thematic Resources'), icon: Layers, color: 'text-[#D5896F]' },
+                    { id: 'hkdse_case_studies', label: t('DAT 個案研究', 'DAT Case Studies'), icon: BookOpen, color: 'text-[#6B9080]' },
+                    { id: 'hkdse_sba_support', label: t('DAT SBA 專題支援', 'DAT SBA Project Support'), icon: Award, color: 'text-[#CCA068]' },
                   ].map((resource) => {
                     const Icon = resource.icon;
                     return (
@@ -443,8 +443,11 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                 )}
               >
                 <Shield className="w-5 h-5 flex-shrink-0 text-[#7B8FA1]" />
-                <span>{t('來源補充', 'Source Add-on')}</span>
+                <span>{t('來源與版權', 'Sources / Copyright')}</span>
               </button>
+              <div className="px-3 pt-4 text-xs font-bold uppercase tracking-wider text-[#A8A29A]">
+                {t('設計工具', 'Design Tools')}
+              </div>
               <button onClick={() => onNavigate('project_hub')} className={clsx(
                 'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
                 currentScreen === 'project_hub'
@@ -523,19 +526,19 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden relative bg-[#F9F8F6]">
+      <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#F9F8F6]">
         {/* Top Bar */}
-        <header className="h-20 border-b border-[#E5E0D8] flex items-center justify-between px-10 bg-white/80 backdrop-blur-sm z-10 sticky top-0">
-          <div>
+        <header className="sticky top-0 z-10 flex min-h-20 flex-col gap-3 border-b border-[#E5E0D8] bg-white/85 px-4 py-4 backdrop-blur-sm md:flex-row md:items-center md:justify-between md:px-8">
+          <div className="min-w-0">
              <div className="text-[#8C857B] text-xs font-bold uppercase tracking-widest mb-1">
                {levelHeader}
              </div>
-             <h2 className="text-xl font-bold text-[#2C2A26] tracking-tight">
+             <h2 className="truncate text-xl font-bold tracking-tight text-[#2C2A26]">
                {currentLabel}
              </h2>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-3">
             {/* DSE / IB Global Toggle */}
             <div className="flex items-center bg-[#F2EFE9] border border-[#E5E0D8] rounded-full p-1 shadow-sm">
               <button
@@ -579,7 +582,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
         </header>
 
         {/* Content Area */}
-        <div data-main-scroll className="flex-1 overflow-y-auto px-8 py-8 relative">
+        <div data-main-scroll className="relative flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">
           <div className="max-w-[1400px] mx-auto pb-10">
             {children}
           </div>

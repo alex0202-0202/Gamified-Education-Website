@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Shield, User, Eye, EyeOff, GraduationCap, LogIn } from 'lucide-react';
+import { Shield, User, Eye, EyeOff, GraduationCap, LogIn, BookOpen, Box, PenTool, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import type { AuthRole } from '../context/AuthContext';
 import { DEMO_AUTH_CONFIG, isDemoAuthMode } from '../../features/auth/authConfig';
@@ -32,25 +32,85 @@ export const LoginPage = () => {
   const needsAccessCode = isAdmin && isDemoAuthMode && DEMO_AUTH_CONFIG.enableDemoAdmin;
   const canSubmit = isAdmin ? Boolean(id.trim() && password.trim()) : Boolean(id.trim());
 
+  const platformHighlights = [
+    {
+      title: 'IB + HKDSE DAT',
+      desc: 'Separate pathways for Design Technology students.',
+      icon: BookOpen,
+      color: 'bg-[#E8EFE6] text-[#6B9080] border-[#D6E2D3]',
+    },
+    {
+      title: 'Project Portfolio',
+      desc: 'Support for design brief, research, prototypes and evaluation.',
+      icon: PenTool,
+      color: 'bg-[#FFF5F0] text-[#D5896F] border-[#F1D2C5]',
+    },
+    {
+      title: 'Maker Tools',
+      desc: 'CAD views, joining methods and 榫接 box generation.',
+      icon: Box,
+      color: 'bg-[#EEF2F5] text-[#7B8FA1] border-[#D8E0E7]',
+    },
+    {
+      title: 'Practice Games',
+      desc: 'Question banks, XP and design-topic revision.',
+      icon: Trophy,
+      color: 'bg-[#FFF8E8] text-[#CCA068] border-[#EEDDAE]',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F9F8F6] p-4 md:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-md"
+        className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl overflow-hidden rounded-3xl border border-[#E5E0D8] bg-white shadow-sm lg:grid-cols-[1.15fr_0.85fr]"
       >
-        {/* Logo / Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#D5896F]/10 border border-[#D5896F]/20 mb-4">
-            <GraduationCap className="w-8 h-8 text-[#D5896F]" />
+        <section className="flex flex-col justify-between bg-[#FDFCFB] p-6 md:p-10">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#E5E0D8] bg-white px-3 py-1 text-[11px] font-black uppercase tracking-widest text-[#8C857B]">
+              <GraduationCap className="h-4 w-4 text-[#D5896F]" />
+              Design Technology Lab
+            </div>
+            <h1 className="mt-6 max-w-2xl text-4xl font-black tracking-tight text-[#2C2A26] md:text-5xl">
+              Learn design by making, testing and improving.
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#6B665E]">
+              A focused platform for IB Design Technology and HKDSE Design and Applied Technology, supporting curriculum learning, portfolio evidence, IA/SBA preparation and workshop-ready design skills.
+            </p>
           </div>
-          <h1 className="text-2xl font-bold text-[#2C2A26]">Design Technology Lab</h1>
-          <p className="text-sm text-[#6B665E] mt-1">IB Design Technology · HKDSE DAT</p>
-          <p className="text-xs text-[#A8A29A] mt-1">Design project, portfolio, IA and SBA support</p>
-        </div>
 
-        {/* Card */}
+          <div className="mt-10 grid gap-3 sm:grid-cols-2">
+            {platformHighlights.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="rounded-2xl border border-[#E5E0D8] bg-white p-4 shadow-sm">
+                  <div className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl border ${item.color}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h2 className="text-sm font-black text-[#2C2A26]">{item.title}</h2>
+                  <p className="mt-1 text-xs leading-5 text-[#6B665E]">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mt-10 text-xs leading-5 text-[#A8A29A]">
+            Demo access only. Production school use requires protected school accounts, role-based permissions and secure server-side student data storage.
+          </p>
+        </section>
+
+        <section className="flex items-center justify-center p-6 md:p-10">
+          <div className="w-full max-w-md">
+            <div className="mb-6">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#D5896F]/10 border border-[#D5896F]/20 mb-4">
+                <GraduationCap className="w-7 h-7 text-[#D5896F]" />
+              </div>
+              <h2 className="text-2xl font-black text-[#2C2A26]">Start learning</h2>
+              <p className="text-sm text-[#6B665E] mt-1">IB Design Technology · HKDSE DAT</p>
+            </div>
+
         <div className="bg-white rounded-2xl border border-[#E5E0D8] shadow-sm overflow-hidden">
           {/* Tabs */}
           <div className="grid grid-cols-2 border-b border-[#E5E0D8]">
@@ -175,6 +235,8 @@ export const LoginPage = () => {
         <p className="text-center text-[10px] text-[#C4BEB8] mt-5">
           Design Technology Lab · demo access only · production data must use protected school storage
         </p>
+          </div>
+        </section>
       </motion.div>
     </div>
   );

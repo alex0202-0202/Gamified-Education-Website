@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { useGame } from '../context/GameContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Shield, Beaker, PenTool, Settings, Cpu, ArrowRight, BookOpen, Layers, Zap } from 'lucide-react';
+import { Shield, Beaker, PenTool, Settings, Cpu, ArrowRight, BookOpen, Layers, Zap, Trophy, Box, Monitor, Hammer, CheckCircle2 } from 'lucide-react';
 import { S4S6Dashboard } from './S4S6Dashboard';
 import { IBDashboard } from './IBDashboard';
 
@@ -143,6 +143,50 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
   }
 
   const currentCurriculum = curriculum[selectedLevel as 'S1' | 'S2' | 'S3'];
+  const levelTitle = selectedLevel === 'S1'
+    ? t('中一級設計與科技', 'Secondary 1 Design and Technology')
+    : selectedLevel === 'S2'
+      ? t('中二級設計與科技', 'Secondary 2 Design and Technology')
+      : t('中三級設計與科技', 'Secondary 3 Design and Technology');
+  const levelSubtitle = selectedLevel === 'S1'
+    ? t('由設計元素、物料、安全、結構及系統開始，建立專題製作基礎。', 'Start with design elements, materials, safety, structures and systems for project making.')
+    : selectedLevel === 'S2'
+      ? t('加強設計過程、物料測試、控制系統及項目管理。', 'Build stronger design process, material testing, control systems and project management.')
+      : t('發展 CAD、產品評鑑、知識產權、系統整合及較完整的設計專題。', 'Develop CAD, product evaluation, intellectual property, system integration and fuller design projects.');
+  const totalModules = currentCurriculum.reduce((sum, section) => sum + section.modules.length, 0);
+  const totalPeriods = currentCurriculum.reduce((sum, section) => sum + section.modules.reduce((sectionSum, module) => sectionSum + module.hours, 0), 0);
+  const progressPercent = Math.min(100, Math.round((user.xp / 1000) * 100));
+
+  const quickActions = [
+    {
+      id: 'project_hub',
+      title: t('專題作品集', 'Project Portfolio'),
+      desc: t('整理設計簡報、研究、草圖、原型及評估證據。', 'Collect brief, research, sketches, prototypes and evaluation evidence.'),
+      icon: Box,
+      color: 'bg-[#FFF5F0] text-[#D5896F] border-[#F1D2C5]',
+    },
+    {
+      id: 'fun_learning',
+      title: t('趣味練習', 'Practice Games'),
+      desc: t('用小測與遊戲鞏固概念，累積 XP。', 'Use quizzes and games to review concepts and earn XP.'),
+      icon: Trophy,
+      color: 'bg-[#FFF8E8] text-[#CCA068] border-[#EEDDAE]',
+    },
+    {
+      id: 'orthographic_projection',
+      title: t('正投影 / CAD', 'Orthographic / CAD'),
+      desc: t('練習平面圖、立面圖、剖面圖及基礎 CAD 思維。', 'Practise plan, elevations, sections and beginner CAD thinking.'),
+      icon: Monitor,
+      color: 'bg-[#EEF2F5] text-[#7B8FA1] border-[#D8E0E7]',
+    },
+    {
+      id: 'joining_methods',
+      title: t('接合與黏合', 'Joining Methods'),
+      desc: t('選擇適合木材、紙板、塑膠、金屬及布料的接合方法。', 'Choose suitable joining methods for wood, card, plastic, metal and fabric.'),
+      icon: Hammer,
+      color: 'bg-[#E8EFE6] text-[#6B9080] border-[#D6E2D3]',
+    },
+  ];
 
   const container = {
     hidden: { opacity: 0 },
@@ -155,65 +199,134 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
   };
 
   return (
-    <div className="space-y-12 pb-20">
-      {/* Header Section */}
-      <div className="flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm border border-[#E5E0D8]">
-        <div>
-          <h2 className="text-2xl font-bold text-[#2C2A26] mb-1 tracking-tight">
-             {selectedLevel === 'S1'
-              ? t('中一級課程概覽', 'Secondary 1 Overview')
-              : selectedLevel === 'S2'
-                ? t('中二級課程概覽', 'Secondary 2 Overview')
-                : t('中三級課程概覽', 'Secondary 3 Overview')}
-          </h2>
-          <p className="text-sm text-[#6B665E]">
-             <span className="font-semibold text-[#D5896F]">{user.name}</span>，{t('選擇單元開始學習', 'select a unit to start learning')}
+    <div className="space-y-8 pb-20">
+      <section className="overflow-hidden rounded-2xl border border-[#E5E0D8] bg-white shadow-sm">
+        <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
+          <div className="p-6 md:p-8">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-3 py-1 text-[11px] font-black uppercase tracking-widest text-[#8C857B]">
+              <BookOpen className="h-3.5 w-3.5 text-[#D5896F]" />
+              {t('學生學習路線', 'Student Learning Path')}
+            </div>
+            <h2 className="max-w-3xl text-3xl font-black tracking-tight text-[#2C2A26] md:text-4xl">
+              {levelTitle}
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6B665E] md:text-base">
+              <span className="font-bold text-[#D5896F]">{user.name}</span>，{levelSubtitle}
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {[
+                { label: t('課程單元', 'Modules'), value: totalModules },
+                { label: t('建議課節', 'Periods'), value: totalPeriods },
+                { label: t('學習進度', 'Progress'), value: `${progressPercent}%` },
+              ].map((item) => (
+                <div key={item.label} className="rounded-xl border border-[#E5E0D8] bg-[#FDFCFB] p-4">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">{item.label}</div>
+                  <div className="mt-1 text-2xl font-black text-[#2C2A26]">{item.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-[#E5E0D8] bg-[#F9F8F6] p-6 lg:border-l lg:border-t-0">
+            <div className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">{t('XP 進度', 'XP Progress')}</div>
+                  <div className="mt-1 text-3xl font-black text-[#2C2A26]">{user.xp}</div>
+                  <div className="text-xs font-bold text-[#8C857B]">/ 1000 XP</div>
+                </div>
+                <div className="relative h-20 w-20">
+                  <svg className="h-full w-full -rotate-90">
+                    <circle cx="40" cy="40" r="32" stroke="#E5E0D8" strokeWidth="7" fill="transparent" />
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="32"
+                      stroke="#D5896F"
+                      strokeWidth="7"
+                      fill="transparent"
+                      strokeLinecap="round"
+                      strokeDasharray={201}
+                      strokeDashoffset={201 - (201 * progressPercent) / 100}
+                      className="transition-all duration-1000 ease-out"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center text-sm font-black text-[#D5896F]">{progressPercent}%</div>
+                </div>
+              </div>
+              <div className="mt-5 h-2 overflow-hidden rounded-full bg-[#F2EFE9]">
+                <div className="h-full rounded-full bg-[#D5896F]" style={{ width: `${progressPercent}%` }} />
+              </div>
+              <button
+                type="button"
+                onClick={() => onNavigate('fun_learning')}
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#2C2A26] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#4A4741] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
+              >
+                <Trophy className="h-4 w-4" />
+                {t('開始練習', 'Start Practice')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="text-xs font-black uppercase tracking-widest text-[#8C857B]">{t('快捷入口', 'Quick Access')}</div>
+            <h3 className="mt-1 text-xl font-black text-[#2C2A26]">{t('先做這些會更容易上手', 'Start here for an easier workflow')}</h3>
+          </div>
+          <p className="max-w-2xl text-sm leading-6 text-[#6B665E]">
+            {t('學生可以先選擇專題、練習、CAD 或接合方法，再回到課程單元學習。', 'Students can start with portfolio, practice, CAD or joining tools, then return to curriculum modules.')}
           </p>
         </div>
-        
-        {/* Progress Card */}
-        <div className="flex items-center gap-4 bg-[#F9F8F6] px-5 py-3.5 rounded-xl border border-[#E5E0D8]">
-           <div className="text-right">
-             <div className="text-[10px] font-bold uppercase tracking-widest text-[#8C857B] mb-0.5">{t('學習進度', 'Progress')}</div>
-             <div className="text-xl font-bold text-[#2C2A26]">{user.xp} <span className="text-xs font-normal text-[#8C857B]">/ 1000 XP</span></div>
-           </div>
-           <div className="w-12 h-12 relative">
-             <svg className="w-full h-full transform -rotate-90">
-               <circle cx="24" cy="24" r="20" stroke="#E5E0D8" strokeWidth="5" fill="transparent" />
-               <circle 
-                  cx="24" 
-                  cy="24" 
-                  r="20" 
-                  stroke="#D5896F" 
-                  strokeWidth="5" 
-                  fill="transparent" 
-                  strokeDasharray={125} 
-                  strokeDashoffset={125 - (125 * (user.xp / 1000))} 
-                  className="transition-all duration-1000 ease-out"
-               />
-             </svg>
-           </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {quickActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onNavigate(action.id)}
+                className="group rounded-2xl border border-[#E5E0D8] bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#D5896F] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
+              >
+                <div className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border ${action.color}`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h4 className="text-base font-black text-[#2C2A26] group-hover:text-[#D5896F]">{action.title}</h4>
+                <p className="mt-2 text-xs leading-5 text-[#6B665E]">{action.desc}</p>
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
       <motion.div 
         variants={container}
         initial="hidden"
         animate="show"
-        className="space-y-10"
+        className="space-y-8"
       >
         {currentCurriculum.map((section, idx) => (
           <section key={idx}>
-            <div className="flex items-center space-x-4 mb-6">
-              <div className={`w-1.5 h-8 rounded-full ${section.color}`} />
-                <h3 className="text-xl font-bold text-[#4A4741]">{isEnglish ? (section as any).enTitle ?? tr(section.title) : section.title}</h3>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className={`h-10 w-2 rounded-full ${section.color}`} />
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">{t('課程部分', 'Curriculum Section')}</div>
+                  <h3 className="text-xl font-black text-[#4A4741]">{isEnglish ? (section as any).enTitle ?? tr(section.title) : section.title}</h3>
+                </div>
+              </div>
+              <div className="hidden rounded-full border border-[#E5E0D8] bg-white px-3 py-1 text-xs font-bold text-[#8C857B] md:block">
+                {section.modules.length} {t('單元', 'modules')}
+              </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {section.modules.map((module) => (
+              {section.modules.map((module, moduleIndex) => (
                 <ModuleCard 
                    key={module.id} 
                    module={module} 
+                   moduleIndex={moduleIndex + 1}
                    color={section.color}
                    onClick={() => onNavigate(module.link)} 
                 />
@@ -226,25 +339,31 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
   );
 };
 
-const ModuleCard = ({ module, onClick, color }: { module: any, onClick: () => void, color: string }) => {
+const ModuleCard = ({ module, moduleIndex, onClick, color }: { module: any, moduleIndex: number, onClick: () => void, color: string }) => {
   const { t, tr, isEnglish } = useLanguage();
 
   return (
-    <motion.div 
+    <motion.button
+      type="button"
       variants={{
         hidden: { opacity: 0, y: 10 },
         show: { opacity: 1, y: 0 }
       }}
       whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)" }}
-      className="bg-white rounded-xl p-5 border border-[#E5E0D8] cursor-pointer transition-all shadow-sm group flex flex-col h-full hover:border-[#D5896F]"
+      className="group flex h-full flex-col rounded-2xl border border-[#E5E0D8] bg-white p-5 text-left shadow-sm transition-all hover:border-[#D5896F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className={`p-2.5 rounded-lg text-white ${color}`}>
+        <div className={`p-2.5 rounded-xl text-white shadow-sm ${color}`}>
           <module.icon className="w-5 h-5" />
         </div>
-        <div className="text-[10px] font-bold text-[#8C857B] bg-[#F9F8F6] px-2 py-1 rounded border border-[#E5E0D8] font-mono">
-          {module.code}
+        <div className="flex items-center gap-2">
+          <div className="rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-2 py-1 text-[10px] font-black text-[#8C857B]">
+            Step {moduleIndex}
+          </div>
+          <div className="text-[10px] font-bold text-[#8C857B] bg-[#F9F8F6] px-2 py-1 rounded border border-[#E5E0D8] font-mono">
+            {module.code}
+          </div>
         </div>
       </div>
       
@@ -256,12 +375,15 @@ const ModuleCard = ({ module, onClick, color }: { module: any, onClick: () => vo
       </p>
       
       <div className="flex items-center justify-between border-t border-[#F0F0F0] pt-4">
-         <span className="text-[10px] font-bold uppercase tracking-widest text-[#8C857B] bg-[#F9F8F6] border border-[#E5E0D8] px-2 py-1 rounded">{module.hours} {t('課節', 'periods')}</span>
+         <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#8C857B] bg-[#F9F8F6] border border-[#E5E0D8] px-2 py-1 rounded">
+           <CheckCircle2 className="h-3 w-3 text-[#6B9080]" />
+           {module.hours} {t('課節', 'periods')}
+         </span>
          <div className="flex items-center text-xs font-bold text-[#4A4741] group-hover:translate-x-1 transition-transform">
            <span>{t('開始', 'Open')}</span>
            <ArrowRight className="w-3 h-3 ml-1" />
          </div>
       </div>
-    </motion.div>
+    </motion.button>
   );
 };
