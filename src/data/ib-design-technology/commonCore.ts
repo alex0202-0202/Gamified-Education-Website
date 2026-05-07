@@ -1,0 +1,103 @@
+import type { DesignTechnologyTopic } from '../types';
+import { sourceById } from '../sources/officialReferences';
+
+const ibSummary = sourceById('prepared-ib-summary');
+
+export const ibDtCommonCore2026: DesignTechnologyTopic[] = [
+  {
+    id: 'ib-2026-topic-1-human-factors',
+    curriculum: 'IB DP Design Technology',
+    version: 'IB last assessment 2026',
+    category: 'Common Core / SL Topic',
+    titleEn: 'Topic 1: Human Factors and Ergonomics',
+    studentSummary:
+      'Design must fit human users physically, cognitively and emotionally. Students should understand how measurements, comfort, safety, perception, senses, behaviour and misuse affect product design.',
+    designFocus: ['human factors', 'ergonomics', 'inclusive product design'],
+    keyConcepts: ['anthropometrics', 'psychological factors', 'physiological factors', 'designing for children', 'ergonomic measurement planning'],
+    classroomActivities: ['chair/desk redesign', 'hand tool redesign', 'children’s product design', 'packaging grip analysis', 'wearable product sizing'],
+    assessmentFocus: ['user profile', 'ergonomic data', 'usability testing', 'safety', 'comfort', 'inclusive design', 'evidence-based iteration'],
+    portfolioEvidence: ['user profile', 'measurement plan', 'usability test notes', 'iteration evidence'],
+    iaOrSbaConnection: 'IB IA connection: supports user research, design specifications, testing and evaluation.',
+    sourceMetadata: ibSummary,
+  },
+  {
+    id: 'ib-2026-topic-2-sustainable-production',
+    curriculum: 'IB DP Design Technology',
+    version: 'IB last assessment 2026',
+    category: 'Common Core / SL Topic',
+    titleEn: 'Topic 2: Resource Management and Sustainable Production',
+    studentSummary:
+      'Designers make material, energy and production choices that affect communities and the environment. Students should move beyond “green-looking” design and analyse whole-life impacts.',
+    designFocus: ['resource management', 'sustainable production', 'life-cycle thinking'],
+    keyConcepts: ['resources and reserves', 'waste mitigation', 'energy use/storage/distribution', 'clean technology', 'green design', 'eco-design', 'life-cycle analysis'],
+    classroomActivities: ['redesign a single-use product', 'battery-powered product comparison', 'life-cycle map', 'waste-to-resource design challenge'],
+    assessmentFocus: ['sustainability reasoning', 'material/energy justification', 'LCA thinking', 'trade-offs', 'feasibility'],
+    portfolioEvidence: ['life-cycle map', 'material/energy comparison', 'trade-off table', 'evaluation notes'],
+    iaOrSbaConnection: 'IB IA connection: supports sustainability criteria, material selection and evaluation.',
+    sourceMetadata: ibSummary,
+  },
+  {
+    id: 'ib-2026-topic-3-modelling',
+    curriculum: 'IB DP Design Technology',
+    version: 'IB last assessment 2026',
+    category: 'Common Core / SL Topic',
+    titleEn: 'Topic 3: Modelling',
+    studentSummary:
+      'Modelling helps designers explore, communicate, test and refine ideas. Students should use different modelling forms at different project stages, from quick sketches to CAD and prototypes.',
+    designFocus: ['modelling', 'design communication', 'prototype testing'],
+    keyConcepts: ['conceptual modelling', 'graphical modelling', 'physical modelling', 'CAD', 'rapid prototyping', 'flowcharts', 'presentation drawings', 'renderings'],
+    classroomActivities: ['flowchart a product-service system', 'sketch iterations', 'cardboard prototype', 'CAD model', '3D-printing feasibility comparison'],
+    assessmentFocus: ['model purpose', 'fidelity choice', 'communication clarity', 'prototype testing', 'design development evidence'],
+    portfolioEvidence: ['sketch iterations', 'model photos', 'CAD screenshots', 'prototype tests'],
+    iaOrSbaConnection: 'IB IA connection: supports conceptual design, detailed development and prototype evidence.',
+    sourceMetadata: ibSummary,
+  },
+  {
+    id: 'ib-2026-topic-4-raw-material-final-product',
+    curriculum: 'IB DP Design Technology',
+    version: 'IB last assessment 2026',
+    category: 'Common Core / SL Topic',
+    titleEn: 'Topic 4: Raw Material to Final Product',
+    studentSummary:
+      'Product decisions depend on material properties, environmental/ethical implications, manufacturing methods, production scale, quality control and automation in production when relevant to manufacturing.',
+    designFocus: ['materials', 'manufacturing', 'production systems'],
+    keyConcepts: ['material properties', 'metals', 'timber', 'glass', 'plastics', 'textiles', 'composites', 'scales of production', 'manufacturing processes', 'production systems'],
+    classroomActivities: ['material selection matrix', 'design for manufacture analysis', 'laser-cut product redesign', 'injection-moulded product case analysis', 'production scale comparison'],
+    assessmentFocus: ['material-property match', 'manufacturing feasibility', 'DfM', 'quality', 'cost', 'ethics', 'production-system understanding'],
+    portfolioEvidence: ['material matrix', 'manufacturing notes', 'production-scale comparison', 'quality-control checklist'],
+    iaOrSbaConnection: 'IB IA connection: supports material choice, manufacturing feasibility and testing/evaluation.',
+    sourceMetadata: ibSummary,
+  },
+  {
+    id: 'ib-2026-topic-5-innovation-design',
+    curriculum: 'IB DP Design Technology',
+    version: 'IB last assessment 2026',
+    category: 'Common Core / SL Topic',
+    titleEn: 'Topic 5: Innovation and Design',
+    studentSummary:
+      'Innovation is not just “new ideas”; it involves adoption, markets, stakeholders, specification, product life-cycle and value creation.',
+    designFocus: ['innovation', 'stakeholders', 'product life cycle'],
+    keyConcepts: ['invention', 'innovation', 'innovation strategies', 'stakeholders', 'product life cycle', 'Rogers’ characteristics of innovation', 'marketing specification'],
+    classroomActivities: ['failed product launch analysis', 'product redesign for a new market', 'stakeholder map', 'innovation diffusion poster'],
+    assessmentFocus: ['difference between invention and innovation', 'stakeholder insight', 'adoption factors', 'specification quality'],
+    portfolioEvidence: ['stakeholder map', 'innovation analysis', 'specification notes', 'market/user fit reflection'],
+    iaOrSbaConnection: 'IB IA connection: supports project rationale, stakeholder evidence and specification quality.',
+    sourceMetadata: ibSummary,
+  },
+  {
+    id: 'ib-2026-topic-6-classic-design',
+    curriculum: 'IB DP Design Technology',
+    version: 'IB last assessment 2026',
+    category: 'Common Core / SL Topic',
+    titleEn: 'Topic 6: Classic Design',
+    studentSummary:
+      'Classic designs endure because of meaningful function, usability, aesthetics, cultural relevance, production quality and long-term value.',
+    designFocus: ['classic design', 'form and function', 'design critique'],
+    keyConcepts: ['characteristics of classic design', 'form and function', 'principles of good design', 'design collections'],
+    classroomActivities: ['iconic product analysis', 'classic vs trend-based design comparison', 'improve a product while preserving its design language'],
+    assessmentFocus: ['function-form relationship', 'timelessness', 'cultural significance', 'design critique', 'communication'],
+    portfolioEvidence: ['product analysis', 'comparative critique', 'annotated redesign', 'reflection'],
+    iaOrSbaConnection: 'IB IA connection: supports precedent analysis and design-critique language.',
+    sourceMetadata: ibSummary,
+  },
+];
