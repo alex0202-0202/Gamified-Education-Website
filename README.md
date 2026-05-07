@@ -1,4 +1,3 @@
-
 # Design Technology Learning Platform
 
 A focused Design Technology learning and teaching platform for:
@@ -67,4 +66,3 @@ See [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) for architecture notes, workf
 ## Environment
 
 Use `.env.example` as the template. Do not commit real `.env` files, production keys, passwords, or student data.
-  
