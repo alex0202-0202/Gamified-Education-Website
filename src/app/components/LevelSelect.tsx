@@ -199,87 +199,53 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
   };
 
   return (
-    <div className="space-y-8 pb-20">
-      <section className="overflow-hidden rounded-2xl border border-[#E5E0D8] bg-white shadow-sm">
-        <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
-          <div className="p-6 md:p-8">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-3 py-1 text-[11px] font-black uppercase tracking-widest text-[#8C857B]">
+    <div className="space-y-6 pb-20">
+      <section className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm md:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-3 py-1 text-[11px] font-black uppercase tracking-widest text-[#8C857B]">
               <BookOpen className="h-3.5 w-3.5 text-[#D5896F]" />
-              {t('學生學習路線', 'Student Learning Path')}
+              {t('今日學習', 'Today')}
             </div>
-            <h2 className="max-w-3xl text-3xl font-black tracking-tight text-[#2C2A26] md:text-4xl">
-              {levelTitle}
-            </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6B665E] md:text-base">
-              <span className="font-bold text-[#D5896F]">{user.name}</span>，{levelSubtitle}
+            <h2 className="mt-3 text-2xl font-black tracking-tight text-[#2C2A26] md:text-3xl">{levelTitle}</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6B665E]">
+              <span className="font-bold text-[#D5896F]">{user.name}</span> · {levelSubtitle}
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              {[
-                { label: t('課程單元', 'Modules'), value: totalModules },
-                { label: t('建議課節', 'Periods'), value: totalPeriods },
-                { label: t('學習進度', 'Progress'), value: `${progressPercent}%` },
-              ].map((item) => (
-                <div key={item.label} className="rounded-xl border border-[#E5E0D8] bg-[#FDFCFB] p-4">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">{item.label}</div>
-                  <div className="mt-1 text-2xl font-black text-[#2C2A26]">{item.value}</div>
-                </div>
-              ))}
-            </div>
           </div>
-          <div className="border-t border-[#E5E0D8] bg-[#F9F8F6] p-6 lg:border-l lg:border-t-0">
-            <div className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">{t('XP 進度', 'XP Progress')}</div>
-                  <div className="mt-1 text-3xl font-black text-[#2C2A26]">{user.xp}</div>
-                  <div className="text-xs font-bold text-[#8C857B]">/ 1000 XP</div>
-                </div>
-                <div className="relative h-20 w-20">
-                  <svg className="h-full w-full -rotate-90">
-                    <circle cx="40" cy="40" r="32" stroke="#E5E0D8" strokeWidth="7" fill="transparent" />
-                    <circle
-                      cx="40"
-                      cy="40"
-                      r="32"
-                      stroke="#D5896F"
-                      strokeWidth="7"
-                      fill="transparent"
-                      strokeLinecap="round"
-                      strokeDasharray={201}
-                      strokeDashoffset={201 - (201 * progressPercent) / 100}
-                      className="transition-all duration-1000 ease-out"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center text-sm font-black text-[#D5896F]">{progressPercent}%</div>
-                </div>
+          <div className="grid grid-cols-3 gap-2 rounded-xl border border-[#E5E0D8] bg-[#FDFCFB] p-2 text-center">
+            {[
+              { label: t('單元', 'Modules'), value: totalModules },
+              { label: t('課節', 'Periods'), value: totalPeriods },
+              { label: 'XP', value: user.xp },
+            ].map((item) => (
+              <div key={item.label} className="min-w-20 rounded-lg bg-white px-3 py-2">
+                <div className="text-lg font-black text-[#2C2A26]">{item.value}</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#8C857B]">{item.label}</div>
               </div>
-              <div className="mt-5 h-2 overflow-hidden rounded-full bg-[#F2EFE9]">
-                <div className="h-full rounded-full bg-[#D5896F]" style={{ width: `${progressPercent}%` }} />
-              </div>
-              <button
-                type="button"
-                onClick={() => onNavigate('fun_learning')}
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#2C2A26] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#4A4741] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
-              >
-                <Trophy className="h-4 w-4" />
-                {t('開始練習', 'Start Practice')}
-              </button>
-            </div>
+            ))}
           </div>
+        </div>
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#F2EFE9]" aria-label={t('學習進度', 'Learning progress')}>
+          <div className="h-full rounded-full bg-[#D5896F]" style={{ width: `${progressPercent}%` }} />
         </div>
       </section>
 
-      <section>
-        <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <section className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
+        <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <div className="text-xs font-black uppercase tracking-widest text-[#8C857B]">{t('快捷入口', 'Quick Access')}</div>
-            <h3 className="mt-1 text-xl font-black text-[#2C2A26]">{t('先做這些會更容易上手', 'Start here for an easier workflow')}</h3>
+            <h3 className="mt-1 text-lg font-black text-[#2C2A26]">{t('選一個開始', 'Choose one to start')}</h3>
           </div>
-          <p className="max-w-2xl text-sm leading-6 text-[#6B665E]">
-            {t('學生可以先選擇專題、練習、CAD 或接合方法，再回到課程單元學習。', 'Students can start with portfolio, practice, CAD or joining tools, then return to curriculum modules.')}
-          </p>
+          <button
+            type="button"
+            onClick={() => onNavigate('fun_learning')}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#2C2A26] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#4A4741] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
+          >
+            <Trophy className="h-4 w-4" />
+            {t('練習', 'Practice')}
+          </button>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {quickActions.map((action) => {
             const Icon = action.icon;
             return (
@@ -287,13 +253,13 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
                 key={action.id}
                 type="button"
                 onClick={() => onNavigate(action.id)}
-                className="group rounded-2xl border border-[#E5E0D8] bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#D5896F] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
+                className="group rounded-xl border border-[#E5E0D8] bg-[#FDFCFB] p-4 text-left transition-all hover:border-[#D5896F] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
               >
-                <div className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border ${action.color}`}>
+                <div className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg border ${action.color}`}>
                   <Icon className="h-5 w-5" />
                 </div>
-                <h4 className="text-base font-black text-[#2C2A26] group-hover:text-[#D5896F]">{action.title}</h4>
-                <p className="mt-2 text-xs leading-5 text-[#6B665E]">{action.desc}</p>
+                <h4 className="text-sm font-black text-[#2C2A26] group-hover:text-[#D5896F]">{action.title}</h4>
+                <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#6B665E]">{action.desc}</p>
               </button>
             );
           })}
@@ -308,12 +274,12 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
       >
         {currentCurriculum.map((section, idx) => (
           <section key={idx}>
-            <div className="mb-4 flex items-center justify-between gap-4">
+            <div className="mb-3 flex items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className={`h-10 w-2 rounded-full ${section.color}`} />
+                <div className={`h-8 w-1.5 rounded-full ${section.color}`} />
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">{t('課程部分', 'Curriculum Section')}</div>
-                  <h3 className="text-xl font-black text-[#4A4741]">{isEnglish ? (section as any).enTitle ?? tr(section.title) : section.title}</h3>
+                  <h3 className="text-base font-black text-[#4A4741] md:text-lg">{isEnglish ? (section as any).enTitle ?? tr(section.title) : section.title}</h3>
                 </div>
               </div>
               <div className="hidden rounded-full border border-[#E5E0D8] bg-white px-3 py-1 text-xs font-bold text-[#8C857B] md:block">
@@ -321,7 +287,7 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
               {section.modules.map((module, moduleIndex) => (
                 <ModuleCard 
                    key={module.id} 
@@ -349,37 +315,35 @@ const ModuleCard = ({ module, moduleIndex, onClick, color }: { module: any, modu
         hidden: { opacity: 0, y: 10 },
         show: { opacity: 1, y: 0 }
       }}
-      whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)" }}
-      className="group flex h-full flex-col rounded-2xl border border-[#E5E0D8] bg-white p-5 text-left shadow-sm transition-all hover:border-[#D5896F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
+      whileHover={{ y: -2 }}
+      className="group flex h-full flex-col rounded-xl border border-[#E5E0D8] bg-white p-4 text-left shadow-sm transition-all hover:border-[#D5896F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F]"
       onClick={onClick}
     >
-      <div className="flex justify-between items-start mb-4">
-        <div className={`p-2.5 rounded-xl text-white shadow-sm ${color}`}>
-          <module.icon className="w-5 h-5" />
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className={`rounded-lg p-2 text-white ${color}`}>
+          <module.icon className="h-4 w-4" />
         </div>
-        <div className="flex items-center gap-2">
-          <div className="rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-2 py-1 text-[10px] font-black text-[#8C857B]">
-            Step {moduleIndex}
-          </div>
-          <div className="text-[10px] font-bold text-[#8C857B] bg-[#F9F8F6] px-2 py-1 rounded border border-[#E5E0D8] font-mono">
+        <div className="min-w-0 text-right">
+          <div className="text-[10px] font-black text-[#8C857B]">Step {moduleIndex}</div>
+          <div className="mt-1 truncate rounded border border-[#E5E0D8] bg-[#F9F8F6] px-2 py-0.5 font-mono text-[10px] font-bold text-[#8C857B]">
             {module.code}
           </div>
         </div>
       </div>
       
-      <h4 className="text-base font-bold text-[#2C2A26] mb-2 group-hover:text-[#D5896F] transition-colors leading-tight">{isEnglish ? module.enName ?? tr(module.name) : module.name}</h4>
-      <p className="text-xs text-[#6B665E] leading-relaxed mb-6 flex-1">
+      <h4 className="mb-2 text-sm font-black leading-tight text-[#2C2A26] transition-colors group-hover:text-[#D5896F]">{isEnglish ? module.enName ?? tr(module.name) : module.name}</h4>
+      <p className="mb-4 line-clamp-2 flex-1 text-xs leading-5 text-[#6B665E]">
         {isEnglish
           ? (module.enDesc ?? tr(module.desc)).split(' | ')[0]
           : module.desc.split('｜')[0]}
       </p>
       
-      <div className="flex items-center justify-between border-t border-[#F0F0F0] pt-4">
-         <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#8C857B] bg-[#F9F8F6] border border-[#E5E0D8] px-2 py-1 rounded">
+      <div className="flex items-center justify-between border-t border-[#F0F0F0] pt-3">
+         <span className="inline-flex items-center gap-1.5 rounded border border-[#E5E0D8] bg-[#F9F8F6] px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-[#8C857B]">
            <CheckCircle2 className="h-3 w-3 text-[#6B9080]" />
            {module.hours} {t('課節', 'periods')}
          </span>
-         <div className="flex items-center text-xs font-bold text-[#4A4741] group-hover:translate-x-1 transition-transform">
+         <div className="flex items-center text-xs font-bold text-[#4A4741] transition-transform group-hover:translate-x-1">
            <span>{t('開始', 'Open')}</span>
            <ArrowRight className="w-3 h-3 ml-1" />
          </div>
