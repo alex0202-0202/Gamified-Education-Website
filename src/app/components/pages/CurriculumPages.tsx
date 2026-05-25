@@ -33,11 +33,63 @@ import { edbS3DesignTechnologyModules } from '../../../data/edb-dt/s3Modules';
 import { edbJuniorDtCaseStudies } from '../../../data/edb-dt/caseStudies';
 import { edbSharedDtDatResources } from '../../../data/edb-dt/sharedResources';
 import { officialReferences } from '../../../data/sources/officialReferences';
+import { getPosterResources } from '../../../data/design-skills/posterResources';
+import { PosterResourceGrid } from '../PosterResourceGrid';
 
 type PageProps = {
   activeTopic?: string;
   onNavigate: (screen: string, topic?: string) => void;
 };
+
+const hkdseDatPosters = getPosterResources([
+  'hkdse-dat-sba-project',
+  'design-process-cycle',
+  'testing-evaluation',
+  'sustainability-life-cycle',
+  'laser-cutting-cam',
+  'materials-selection',
+]);
+
+const juniorDtPosters = getPosterResources([
+  'design-process-cycle',
+  'materials-selection',
+  'mechanisms-systems',
+  'orthographic-projection',
+  'joining-methods-adhesives',
+  'scamper-ideation',
+]);
+
+const ibMypPosters = getPosterResources([
+  'ib-myp-design-criteria',
+  'design-process-cycle',
+  'scamper-ideation',
+  'testing-evaluation',
+  'orthographic-projection',
+]);
+
+const ibDpOverviewPosters = getPosterResources([
+  'ib-dp-design-technology',
+  'ergonomics-human-factors',
+  'sustainability-life-cycle',
+  'materials-selection',
+  '3d-printing-additive-manufacturing',
+  'laser-cutting-cam',
+]);
+
+const assessmentSupportPosters = getPosterResources([
+  'hkdse-dat-sba-project',
+  'testing-evaluation',
+  'design-process-cycle',
+  'sustainability-life-cycle',
+]);
+
+const ibProjectSupportPosters = getPosterResources([
+  'ib-myp-design-criteria',
+  'testing-evaluation',
+  'design-process-cycle',
+  'ergonomics-human-factors',
+  'sustainability-life-cycle',
+]);
 
 const SectionHeader = ({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) => (
   <div className="space-y-2">
@@ -250,6 +302,13 @@ export const HKDSEDATPage = ({ onNavigate }: PageProps) => (
       <PathButton title="DAT Case Studies" body="Retail, OEM-to-ODM, smart security, digital video, game consoles and hydrogen mobility." icon={FileText} onClick={() => onNavigate('hkdse_case_studies')} />
       <PathButton title="SBA Support" body="Problem launch, research, design development, testing and evaluation support." icon={ClipboardCheck} onClick={() => onNavigate('hkdse_sba_support')} />
     </section>
+    <PosterResourceGrid
+      title="HKDSE DAT visual knowledge posters"
+      description="Add-on visual guides for DAT project workflow, SBA evidence, materials, laser cutting, sustainability and testing."
+      posters={hkdseDatPosters}
+      onNavigate={onNavigate}
+      compact
+    />
   </div>
 );
 
@@ -294,6 +353,12 @@ export const DATCaseStudiesPage = ({ activeTopic, onNavigate }: PageProps) => {
 export const DATSbaSupportPage = () => (
   <div className="space-y-8 pb-20">
     <SectionHeader eyebrow="HKDSE DAT SBA Support" title="DAT SBA and Design Project Support" body="Structured support for problem identification, research, design development, testing, evaluation and portfolio evidence. This section does not merge DAT SBA with IB IA." />
+    <PosterResourceGrid
+      title="SBA workflow and evaluation posters"
+      description="Use these as student-facing reminders for SBA stages, evidence, testing, sustainability and project decisions."
+      posters={assessmentSupportPosters}
+      compact
+    />
     <SupportGrid modules={hkdseDatSbaSupport} />
   </div>
 );
@@ -311,6 +376,13 @@ export const EDBJuniorDesignTechnologyPage = ({ onNavigate }: PageProps) => {
         eyebrow="EDB S1-S3 DT Add-on"
         title="S1-S3 Design and Technology summary"
         body="Add-on curriculum data for junior Design and Technology. This page summarises the existing lower-secondary DT pathway and does not replace the original S1-S3 dashboard, modules, resources or games."
+      />
+      <PosterResourceGrid
+        title="S1-S3 Design and Technology poster resources"
+        description="Visual guides for junior DT topics: design process, materials, mechanisms, orthographic drawing, joining and ideation."
+        posters={juniorDtPosters}
+        onNavigate={onNavigate}
+        compact
       />
       {groups.map((group) => (
         <section key={group.title} className="space-y-4">
@@ -434,6 +506,13 @@ export const IBDesignTechnologyPage = ({ onNavigate }: PageProps) => (
       <PathButton title="IB Case Studies" body="Original short case cards for ethics, innovation, materials and sustainability discussion." icon={FileText} onClick={() => onNavigate('ib_case_studies')} />
       <PathButton title="Research for Design" body="Ethics, tools, surveys, strategies and source management for IA/SBA inquiry." icon={Search} onClick={() => onNavigate('ib_research_for_design')} />
     </section>
+    <PosterResourceGrid
+      title="IB DP Design Technology poster resources"
+      description="Student-facing posters for IB DT overview, ergonomics, sustainability, materials, CAD/CAM and prototyping."
+      posters={ibDpOverviewPosters}
+      onNavigate={onNavigate}
+      compact
+    />
   </div>
 );
 
@@ -473,6 +552,13 @@ export const IBMypDesignPage = () => (
         ))}
       </div>
     </section>
+
+    <PosterResourceGrid
+      title="MYP Design portfolio and ideation posters"
+      description="These posters help students connect MYP criteria, the design cycle, SCAMPER, testing and technical drawing evidence."
+      posters={ibMypPosters}
+      compact
+    />
 
     <section className="grid grid-cols-1 gap-5 xl:grid-cols-3">
       <article className="rounded-2xl border border-[#E5E0D8] bg-white p-6 shadow-sm xl:col-span-2">
@@ -521,6 +607,13 @@ export const IBCurrent2026Page = ({ activeTopic, onNavigate }: PageProps) => {
     <div className="space-y-8 pb-20">
       <SectionHeader eyebrow="IB Current / Last-Assessment 2026" title="Common Core Topics 1-6 and HL Extension Topics 7-10" body="This page keeps the current/last-assessment 2026 structure separate from the first-assessment 2027 course." />
       {selected && <TopicDetail topic={selected} />}
+      <PosterResourceGrid
+        title="IB DP topic revision posters"
+        description="Mapped visual support for human factors, sustainability, materials, modelling, CAM and prototyping topics."
+        posters={ibDpOverviewPosters}
+        onNavigate={onNavigate}
+        compact
+      />
       <SectionHeader eyebrow="Common Core / SL" title="Topics 1-6" />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {ibDtCommonCore2026.map((topic) => <TopicCard key={topic.id} topic={topic} onClick={() => onNavigate('ib_current_2026', topic.id)} />)}
@@ -557,6 +650,12 @@ export const IBNew2027Page = ({ activeTopic, onNavigate }: PageProps) => {
 export const IBIASupportPage = () => (
   <div className="space-y-8 pb-20">
     <SectionHeader eyebrow="IB IA / Design Project Support" title="IB Design Technology IA Support" body="Support modules for project launch, research, development, evaluation and presentation. These are designed for IB IA, not DAT SBA, although research skills overlap." />
+    <PosterResourceGrid
+      title="IA portfolio and evaluation posters"
+      description="Use these as quick student references for MYP/DP design evidence, testing, user-centred decisions and sustainability reflection."
+      posters={ibProjectSupportPosters}
+      compact
+    />
     <SupportGrid modules={ibDtIaSupport} />
   </div>
 );

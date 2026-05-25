@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Box, Ruler, Shapes } from 'lucide-react';
 import { orthographicPracticeTasks, orthographicViewGuides, type OrthographicViewId } from '../../data/design-skills/orthographicProjection';
+import { getPosterResources } from '../../data/design-skills/posterResources';
+import { PosterResourceGrid } from '../../app/components/PosterResourceGrid';
 import { CADWorkspace2D, type CadShape, type CadShapeType, type CadTool } from './CADWorkspace2D';
 import { ModelPreview3D } from './ModelPreview3D';
 import { SectionViewPanel } from './SectionViewPanel';
@@ -11,6 +13,7 @@ type Props = {
 };
 
 const snap = (value: number) => Math.round(value / 20) * 20;
+const orthographicPosters = getPosterResources(['orthographic-projection', 'laser-cutting-cam', '3d-printing-additive-manufacturing']);
 
 export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
   const [activeView, setActiveView] = useState<OrthographicViewId>('isometric');
@@ -161,6 +164,14 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
       </section>
 
       <SectionViewPanel cutPosition={cutPosition} onCutPositionChange={setCutPosition} />
+
+      <PosterResourceGrid
+        title="Orthographic, CAD and CAM poster support"
+        description="Use these visual guides when students move between 2D drawings, 3D forms, CAD models, laser cutting and additive manufacturing."
+        posters={orthographicPosters}
+        onNavigate={onNavigate}
+        compact
+      />
 
       <section className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-bold text-[#2C2A26]">Practice Tasks</h2>

@@ -3,6 +3,8 @@ import { ArrowRight, Beaker, BookOpen, Box, ClipboardList, Cpu, FileSearch, Hamm
 import type { LucideIcon } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { useLanguage } from '../context/LanguageContext';
+import { PosterResourceGrid } from './PosterResourceGrid';
+import { getPosterResources } from '../../data/design-skills/posterResources';
 
 type ProjectHubProps = {
   onNavigate: (screen: string, topic?: string) => void;
@@ -17,6 +19,15 @@ type ProjectCard = {
   color: string;
   action: () => void;
 };
+
+const projectHubPosters = getPosterResources([
+  'design-process-cycle',
+  'hkdse-dat-sba-project',
+  'testing-evaluation',
+  'scamper-ideation',
+  'sustainability-life-cycle',
+  'ergonomics-human-factors',
+]);
 
 export const ProjectHub = ({ onNavigate }: ProjectHubProps) => {
   const { selectedLevel } = useGame();
@@ -210,6 +221,17 @@ export const ProjectHub = ({ onNavigate }: ProjectHubProps) => {
           </motion.button>
         </div>
       </section>
+
+      <PosterResourceGrid
+        title={t('專題與作品集海報資源', 'Project and Portfolio Poster Resources')}
+        description={t(
+          '這些海報可直接支援問題識別、構思、SBA/IA、測試評鑑、可持續設計和人體工學決策。',
+          'These posters support problem identification, ideation, SBA/IA work, testing and evaluation, sustainability, and ergonomics decisions.'
+        )}
+        posters={projectHubPosters}
+        onNavigate={onNavigate}
+        compact
+      />
 
       <section className="bg-[#FDFCFB] rounded-2xl border border-[#E5E0D8] p-6">
         <div className="flex items-start gap-3">

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Filter, Layers, Zap, Flame, Droplet, ArrowRight, BookOpen } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { PosterResourceGrid } from './PosterResourceGrid';
+import { getPosterResources } from '../../data/design-skills/posterResources';
 
 const materialsData = [
   // 木材 Wood
@@ -40,6 +42,12 @@ const materialsData = [
 ];
 
 const categories = ['全部 (All)', '木材 (Wood)', '金屬 (Metals)', '塑膠 (Polymers)', '複合及智能材料 (Smart/Composites)'];
+const materialPosters = getPosterResources([
+  'materials-selection',
+  'sustainability-life-cycle',
+  'joining-methods-adhesives',
+  '3d-printing-additive-manufacturing',
+]);
 
 export const MaterialsDatabase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -113,6 +121,16 @@ export const MaterialsDatabase = () => {
           ))}
         </div>
       </div>
+
+      <PosterResourceGrid
+        title={t('材料選擇與製造海報', 'Materials Selection and Manufacturing Posters')}
+        description={t(
+          '把材料資料庫連接到選材、接合、可持續設計和 3D 打印製作決策。',
+          'Connect the materials database to material selection, joining, sustainability and 3D-printing decisions.'
+        )}
+        posters={materialPosters}
+        compact
+      />
 
       {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

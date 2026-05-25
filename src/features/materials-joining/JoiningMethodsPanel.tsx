@@ -1,5 +1,7 @@
 import { Hammer, ShieldCheck } from 'lucide-react';
 import { joiningMethods } from '../../data/design-skills/joiningMethods';
+import { getPosterResources } from '../../data/design-skills/posterResources';
+import { PosterResourceGrid } from '../../app/components/PosterResourceGrid';
 import { AdhesiveSelector } from './AdhesiveSelector';
 import { JointingMethodCards } from './JointingMethodCards';
 
@@ -14,6 +16,13 @@ const activities = [
   'Choose the best joining method for a mixed-material product.',
   'Create a curved cardboard structure using scoring and layering.',
 ];
+
+const joiningPosters = getPosterResources([
+  'joining-methods-adhesives',
+  'finger-joint-box-maker',
+  'curved-cardboard-living-hinge',
+  'materials-selection',
+]);
 
 export const JoiningMethodsPanel = ({ onNavigate }: Props) => (
   <div className="space-y-8 pb-20">
@@ -43,6 +52,14 @@ export const JoiningMethodsPanel = ({ onNavigate }: Props) => (
     </section>
 
     <AdhesiveSelector />
+
+    <PosterResourceGrid
+      title="Joining, adhesives and sheet-material posters"
+      description="Use these posters to connect practical joining choices with material suitability, 榫接 box design and curved cardboard making."
+      posters={joiningPosters}
+      onNavigate={onNavigate}
+      compact
+    />
 
     <section className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center gap-2">

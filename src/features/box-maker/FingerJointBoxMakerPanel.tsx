@@ -19,9 +19,17 @@ import {
   type MaterialPreset,
   type UnitType,
 } from '../../data/design-skills/fingerJointBoxMaker';
+import { getPosterResources } from '../../data/design-skills/posterResources';
+import { PosterResourceGrid } from '../../app/components/PosterResourceGrid';
 import { explainDxfExportStatus } from './dxfExport';
 
 const BoxAssembly3DView = lazy(() => import('./BoxAssembly3DView').then((module) => ({ default: module.BoxAssembly3DView })));
+const boxMakerPosters = getPosterResources([
+  'finger-joint-box-maker',
+  'laser-cutting-cam',
+  'curved-cardboard-living-hinge',
+  'joining-methods-adhesives',
+]);
 
 type Props = {
   onNavigate: (screen: string, topic?: string) => void;
@@ -1708,6 +1716,14 @@ export const FingerJointBoxMakerPanel = ({ onNavigate }: Props) => {
       </section>
 
       <KerfBendGenerator />
+
+      <PosterResourceGrid
+        title="榫接, laser cutting and curved cardboard poster support"
+        description="Use these guides before students export SVG files, test press-fit joints, prepare CAM settings or generate living-hinge patterns."
+        posters={boxMakerPosters}
+        onNavigate={onNavigate}
+        compact
+      />
 
       <section className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
