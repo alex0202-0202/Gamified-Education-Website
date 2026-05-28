@@ -43,6 +43,10 @@ const materialsData = [
 
 const categories = ['全部 (All)', '木材 (Wood)', '金屬 (Metals)', '塑膠 (Polymers)', '複合及智能材料 (Smart/Composites)'];
 const materialPosters = getPosterResources([
+  'zh-materials-selection',
+  'zh-sustainability-life-cycle',
+  'zh-joining-methods-adhesives',
+  'zh-3d-printing-additive-manufacturing',
   'materials-selection',
   'sustainability-life-cycle',
   'joining-methods-adhesives',

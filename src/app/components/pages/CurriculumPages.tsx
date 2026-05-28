@@ -43,6 +43,12 @@ type PageProps = {
 };
 
 const hkdseDatPosters = getPosterResources([
+  'zh-hkdse-dat-project-guide',
+  'zh-design-process-cycle',
+  'zh-testing-evaluation',
+  'zh-sustainability-life-cycle',
+  'zh-laser-cutting-cam',
+  'zh-materials-selection',
   'hkdse-dat-sba-project',
   'design-process-cycle',
   'testing-evaluation',
@@ -52,6 +58,13 @@ const hkdseDatPosters = getPosterResources([
 ]);
 
 const juniorDtPosters = getPosterResources([
+  'zh-design-process-cycle',
+  'zh-materials-selection',
+  'zh-mechanisms-systems',
+  'zh-orthographic-projection',
+  'zh-joining-methods-adhesives',
+  'zh-scamper-ideation',
+  'zh-ergonomics-human-factors',
   'design-process-cycle',
   'materials-selection',
   'mechanisms-systems',
@@ -61,6 +74,11 @@ const juniorDtPosters = getPosterResources([
 ]);
 
 const ibMypPosters = getPosterResources([
+  'zh-ib-myp-design-criteria',
+  'zh-design-process-cycle',
+  'zh-scamper-ideation',
+  'zh-testing-evaluation',
+  'zh-orthographic-projection',
   'ib-myp-design-criteria',
   'design-process-cycle',
   'scamper-ideation',
@@ -69,6 +87,12 @@ const ibMypPosters = getPosterResources([
 ]);
 
 const ibDpOverviewPosters = getPosterResources([
+  'zh-ib-dp-design-technology',
+  'zh-ergonomics-human-factors',
+  'zh-sustainability-life-cycle',
+  'zh-materials-selection',
+  'zh-3d-printing-additive-manufacturing',
+  'zh-laser-cutting-cam',
   'ib-dp-design-technology',
   'ergonomics-human-factors',
   'sustainability-life-cycle',
@@ -78,6 +102,10 @@ const ibDpOverviewPosters = getPosterResources([
 ]);
 
 const assessmentSupportPosters = getPosterResources([
+  'zh-hkdse-dat-project-guide',
+  'zh-testing-evaluation',
+  'zh-design-process-cycle',
+  'zh-sustainability-life-cycle',
   'hkdse-dat-sba-project',
   'testing-evaluation',
   'design-process-cycle',
@@ -85,6 +113,11 @@ const assessmentSupportPosters = getPosterResources([
 ]);
 
 const ibProjectSupportPosters = getPosterResources([
+  'zh-ib-myp-design-criteria',
+  'zh-testing-evaluation',
+  'zh-design-process-cycle',
+  'zh-ergonomics-human-factors',
+  'zh-sustainability-life-cycle',
   'ib-myp-design-criteria',
   'testing-evaluation',
   'design-process-cycle',

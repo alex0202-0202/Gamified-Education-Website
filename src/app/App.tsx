@@ -19,6 +19,7 @@ import { IBResourceHub } from './components/IBResourceHub';
 import { IBSubtopicDetail } from './components/IBSubtopicDetail';
 import { IBResourceDetail } from './components/IBResourceDetail';
 import { ProjectHub } from './components/ProjectHub';
+import { CambridgeALevelDTPage } from './components/pages/CambridgeALevelDTPage';
 import {
   DATCaseStudiesPage,
   DATSbaSupportPage,
@@ -87,6 +88,8 @@ function AppContent() {
         return <SourceMetadataPage />;
       case 'poster_library':
         return <PosterLibraryPage onNavigate={handleNavigate} />;
+      case 'cambridge_alevel_dt':
+        return <CambridgeALevelDTPage onNavigate={handleNavigate} />;
       case 'dashboard':
         return <LevelSelect onNavigate={handleNavigate} activeTopic={activeTopic} />;
       case 'safety':

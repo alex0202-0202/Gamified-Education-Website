@@ -18,6 +18,10 @@ const activities = [
 ];
 
 const joiningPosters = getPosterResources([
+  'zh-joining-methods-adhesives',
+  'zh-finger-joint-box-maker',
+  'zh-curved-cardboard-living-hinge',
+  'zh-materials-selection',
   'joining-methods-adhesives',
   'finger-joint-box-maker',
   'curved-cardboard-living-hinge',

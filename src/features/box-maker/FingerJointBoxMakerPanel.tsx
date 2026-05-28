@@ -25,6 +25,10 @@ import { explainDxfExportStatus } from './dxfExport';
 
 const BoxAssembly3DView = lazy(() => import('./BoxAssembly3DView').then((module) => ({ default: module.BoxAssembly3DView })));
 const boxMakerPosters = getPosterResources([
+  'zh-finger-joint-box-maker',
+  'zh-laser-cutting-cam',
+  'zh-curved-cardboard-living-hinge',
+  'zh-joining-methods-adhesives',
   'finger-joint-box-maker',
   'laser-cutting-cam',
   'curved-cardboard-living-hinge',

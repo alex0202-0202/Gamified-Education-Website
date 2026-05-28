@@ -21,6 +21,12 @@ type ProjectCard = {
 };
 
 const projectHubPosters = getPosterResources([
+  'zh-design-process-cycle',
+  'zh-hkdse-dat-project-guide',
+  'zh-testing-evaluation',
+  'zh-scamper-ideation',
+  'zh-sustainability-life-cycle',
+  'zh-ergonomics-human-factors',
   'design-process-cycle',
   'hkdse-dat-sba-project',
   'testing-evaluation',

@@ -13,7 +13,14 @@ type Props = {
 };
 
 const snap = (value: number) => Math.round(value / 20) * 20;
-const orthographicPosters = getPosterResources(['orthographic-projection', 'laser-cutting-cam', '3d-printing-additive-manufacturing']);
+const orthographicPosters = getPosterResources([
+  'zh-orthographic-projection',
+  'zh-laser-cutting-cam',
+  'zh-3d-printing-additive-manufacturing',
+  'orthographic-projection',
+  'laser-cutting-cam',
+  '3d-printing-additive-manufacturing',
+]);
 
 export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
   const [activeView, setActiveView] = useState<OrthographicViewId>('isometric');
