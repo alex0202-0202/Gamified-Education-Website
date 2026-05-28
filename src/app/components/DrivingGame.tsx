@@ -898,14 +898,20 @@ export const DrivingGame = ({ onBack }: Props) => {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft'  || e.key === 'a') { keysRef.current.left  = true; applySteer(-1); }
-      if (e.key === 'ArrowRight' || e.key === 'd') { keysRef.current.right = true; applySteer(1);  }
-      if (e.key === 'ArrowUp'    || e.key === 'w' || e.key === ' ') keysRef.current.accel = true;
+      const key = e.key.toLowerCase();
+      const isGameKey = key === 'arrowleft' || key === 'arrowright' || key === 'arrowup' || key === 'a' || key === 'd' || key === 'w' || key === ' ';
+      if (isGameKey) e.preventDefault();
+      if (key === 'arrowleft'  || key === 'a') { keysRef.current.left  = true; applySteer(-1); }
+      if (key === 'arrowright' || key === 'd') { keysRef.current.right = true; applySteer(1);  }
+      if (key === 'arrowup'    || key === 'w' || key === ' ') keysRef.current.accel = true;
     };
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft'  || e.key === 'a') keysRef.current.left  = false;
-      if (e.key === 'ArrowRight' || e.key === 'd') keysRef.current.right = false;
-      if (e.key === 'ArrowUp'    || e.key === 'w' || e.key === ' ') keysRef.current.accel = false;
+      const key = e.key.toLowerCase();
+      const isGameKey = key === 'arrowleft' || key === 'arrowright' || key === 'arrowup' || key === 'a' || key === 'd' || key === 'w' || key === ' ';
+      if (isGameKey) e.preventDefault();
+      if (key === 'arrowleft'  || key === 'a') keysRef.current.left  = false;
+      if (key === 'arrowright' || key === 'd') keysRef.current.right = false;
+      if (key === 'arrowup'    || key === 'w' || key === ' ') keysRef.current.accel = false;
     };
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup',   onKeyUp);
@@ -914,6 +920,13 @@ export const DrivingGame = ({ onBack }: Props) => {
       window.removeEventListener('keyup',   onKeyUp);
     };
   }, [applySteer]);
+
+  useEffect(() => {
+    if (phase !== 'playing') {
+      keysRef.current = { left: false, right: false, accel: false };
+      steerDirRef.current = 0;
+    }
+  }, [phase]);
 
   // ── Boost button ──────────────────────────────────────────────────────────
   const activateBoost = useCallback(() => {

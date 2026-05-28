@@ -22,6 +22,7 @@ import {
   Monitor,
   Trophy,
   LogOut,
+  Images,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { motion } from 'motion/react';
@@ -213,6 +214,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
     ib_case_studies: 'IB Case Studies',
     ib_research_for_design: 'Research for Design',
     source_metadata: 'Source / Reference Metadata',
+    poster_library: '知識海報庫 (Poster Library)',
     materials_db: '材料資料庫 (Materials Database)',
     hkdse_resources: 'HKDSE 課程資源 (D&T / DAT 中一至中六)',
     resource_hub: '學習資源中心',
@@ -444,6 +446,18 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
               >
                 <Shield className="w-5 h-5 flex-shrink-0 text-[#7B8FA1]" />
                 <span>{t('來源與版權', 'Sources / Copyright')}</span>
+              </button>
+              <button
+                onClick={() => onNavigate('poster_library')}
+                className={clsx(
+                  'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
+                  currentScreen === 'poster_library'
+                    ? 'bg-[#F2EFE9] text-[#2C2A26] shadow-sm'
+                    : 'text-[#6B665E] hover:bg-[#F9F8F6]'
+                )}
+              >
+                <Images className="w-5 h-5 flex-shrink-0 text-[#D5896F]" />
+                <span>{t('知識海報庫', 'Poster Library')}</span>
               </button>
               <div className="px-3 pt-4 text-xs font-bold uppercase tracking-wider text-[#A8A29A]">
                 {t('設計工具', 'Design Tools')}

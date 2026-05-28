@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { useGame } from '../context/GameContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Shield, Beaker, PenTool, Settings, Cpu, ArrowRight, BookOpen, Layers, Zap, Trophy, Box, Monitor, Hammer, CheckCircle2 } from 'lucide-react';
+import { Shield, Beaker, PenTool, Settings, Cpu, ArrowRight, BookOpen, Layers, Zap, Trophy, Box, Monitor, Hammer, CheckCircle2, Images, Car } from 'lucide-react';
 import { S4S6Dashboard } from './S4S6Dashboard';
 import { IBDashboard } from './IBDashboard';
 
@@ -173,6 +173,13 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
       color: 'bg-[#FFF8E8] text-[#CCA068] border-[#EEDDAE]',
     },
     {
+      id: 'poster_library',
+      title: t('知識海報庫', 'Poster Library'),
+      desc: t('快速查看設計過程、物料、正投影、榫接、雷射切割及評估海報。', 'View posters for process, materials, orthographic drawing, joints, laser cutting and evaluation.'),
+      icon: Images,
+      color: 'bg-[#FFF5F0] text-[#D5896F] border-[#F1D2C5]',
+    },
+    {
       id: 'orthographic_projection',
       title: t('正投影 / CAD', 'Orthographic / CAD'),
       desc: t('練習平面圖、立面圖、剖面圖及基礎 CAD 思維。', 'Practise plan, elevations, sections and beginner CAD thinking.'),
@@ -185,6 +192,13 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
       desc: t('選擇適合木材、紙板、塑膠、金屬及布料的接合方法。', 'Choose suitable joining methods for wood, card, plastic, metal and fabric.'),
       icon: Hammer,
       color: 'bg-[#E8EFE6] text-[#6B9080] border-[#D6E2D3]',
+    },
+    {
+      id: 'driving_game',
+      title: t('賽車挑戰', 'Driving Challenge'),
+      desc: t('用方向鍵駕駛並回答設計科技題目。', 'Drive with keyboard controls and answer Design Technology checkpoints.'),
+      icon: Car,
+      color: 'bg-[#EEF2F5] text-[#7B8FA1] border-[#D8E0E7]',
     },
   ];
 
@@ -245,7 +259,7 @@ export const LevelSelect = ({ onNavigate, activeTopic }: LevelSelectProps) => {
             {t('練習', 'Practice')}
           </button>
         </div>
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
           {quickActions.map((action) => {
             const Icon = action.icon;
             return (

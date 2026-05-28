@@ -30,6 +30,7 @@ import {
   IBIASupportPage,
   IBNew2027Page,
   IBResearchForDesignPage,
+  PosterLibraryPage,
   SourceMetadataPage,
 } from './components/pages/CurriculumPages';
 import { DndProvider } from 'react-dnd';
@@ -84,6 +85,8 @@ function AppContent() {
         return <IBResearchForDesignPage />;
       case 'source_metadata':
         return <SourceMetadataPage />;
+      case 'poster_library':
+        return <PosterLibraryPage onNavigate={handleNavigate} />;
       case 'dashboard':
         return <LevelSelect onNavigate={handleNavigate} activeTopic={activeTopic} />;
       case 'safety':

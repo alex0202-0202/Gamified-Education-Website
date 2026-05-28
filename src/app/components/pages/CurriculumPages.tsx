@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -33,7 +34,7 @@ import { edbS3DesignTechnologyModules } from '../../../data/edb-dt/s3Modules';
 import { edbJuniorDtCaseStudies } from '../../../data/edb-dt/caseStudies';
 import { edbSharedDtDatResources } from '../../../data/edb-dt/sharedResources';
 import { officialReferences } from '../../../data/sources/officialReferences';
-import { getPosterResources } from '../../../data/design-skills/posterResources';
+import { getPosterResources, posterResources } from '../../../data/design-skills/posterResources';
 import { PosterResourceGrid } from '../PosterResourceGrid';
 
 type PageProps = {
@@ -734,3 +735,103 @@ export const SourceMetadataPage = () => (
     </div>
   </div>
 );
+
+export const PosterLibraryPage = ({ onNavigate }: PageProps) => {
+  const [query, setQuery] = useState('');
+  const [curriculumFilter, setCurriculumFilter] = useState('all');
+  const [areaFilter, setAreaFilter] = useState('all');
+
+  const curricula = useMemo(
+    () => Array.from(new Set(posterResources.flatMap((poster) => poster.curriculum))).sort(),
+    [],
+  );
+  const knowledgeAreas = useMemo(
+    () => Array.from(new Set(posterResources.flatMap((poster) => poster.knowledgeAreas))).sort(),
+    [],
+  );
+
+  const filteredPosters = useMemo(() => {
+    const normalisedQuery = query.trim().toLowerCase();
+    return posterResources.filter((poster) => {
+      const matchesCurriculum = curriculumFilter === 'all' || poster.curriculum.includes(curriculumFilter);
+      const matchesArea = areaFilter === 'all' || poster.knowledgeAreas.includes(areaFilter);
+      const searchPool = [
+        poster.title,
+        poster.titleZh,
+        poster.alt,
+        poster.studentUse,
+        poster.teacherUse,
+        ...poster.curriculum,
+        ...poster.knowledgeAreas,
+      ].join(' ').toLowerCase();
+      return matchesCurriculum && matchesArea && (!normalisedQuery || searchPool.includes(normalisedQuery));
+    });
+  }, [areaFilter, curriculumFilter, query]);
+
+  return (
+    <div className="space-y-8 pb-20">
+      <section className="rounded-3xl border border-[#E5E0D8] bg-white p-6 shadow-sm md:p-8">
+        <SectionHeader
+          eyebrow="Knowledge Map"
+          title="Design Technology Poster Library"
+          body="A single visual resource map for design process, SBA/IA evidence, MYP criteria, orthographic drawing, materials, mechanisms, ergonomics, sustainability, laser cutting, 3D printing, joining methods and curved cardboard."
+        />
+        <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-[1fr_220px_220px]">
+          <label className="text-xs font-bold text-[#6B665E]">
+            Search poster, concept or skill
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="e.g. kerf, ergonomics, SCAMPER, orthographic..."
+              className="mt-1 w-full rounded-xl border border-[#E5E0D8] bg-[#F9F8F6] px-4 py-3 text-sm text-[#2C2A26] focus:border-[#D5896F] focus:outline-none"
+            />
+          </label>
+          <label className="text-xs font-bold text-[#6B665E]">
+            Curriculum
+            <select
+              value={curriculumFilter}
+              onChange={(event) => setCurriculumFilter(event.target.value)}
+              className="mt-1 w-full rounded-xl border border-[#E5E0D8] bg-[#F9F8F6] px-4 py-3 text-sm text-[#2C2A26] focus:border-[#D5896F] focus:outline-none"
+            >
+              <option value="all">All curricula</option>
+              {curricula.map((curriculum) => <option key={curriculum} value={curriculum}>{curriculum}</option>)}
+            </select>
+          </label>
+          <label className="text-xs font-bold text-[#6B665E]">
+            Knowledge area
+            <select
+              value={areaFilter}
+              onChange={(event) => setAreaFilter(event.target.value)}
+              className="mt-1 w-full rounded-xl border border-[#E5E0D8] bg-[#F9F8F6] px-4 py-3 text-sm text-[#2C2A26] focus:border-[#D5896F] focus:outline-none"
+            >
+              <option value="all">All areas</option>
+              {knowledgeAreas.map((area) => <option key={area} value={area}>{area}</option>)}
+            </select>
+          </label>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-[#6B665E]">
+          <span className="rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-3 py-1">{filteredPosters.length} / {posterResources.length} posters</span>
+          <button type="button" onClick={() => { setQuery(''); setCurriculumFilter('all'); setAreaFilter('all'); }} className="rounded-full border border-[#E5E0D8] bg-white px-3 py-1 hover:bg-[#F9F8F6]">
+            Reset filters
+          </button>
+        </div>
+      </section>
+
+      {filteredPosters.length > 0 ? (
+        <PosterResourceGrid
+          eyebrow="Filtered Posters"
+          title="Matched visual learning resources"
+          description="Each poster card links back to the most relevant tool, curriculum page or project-support section."
+          posters={filteredPosters}
+          onNavigate={onNavigate}
+          compact
+        />
+      ) : (
+        <section className="rounded-2xl border border-[#E5E0D8] bg-white p-8 text-center shadow-sm">
+          <h2 className="text-xl font-bold text-[#2C2A26]">No matching posters</h2>
+          <p className="mt-2 text-sm text-[#6B665E]">Try a wider keyword, another curriculum, or reset the filters.</p>
+        </section>
+      )}
+    </div>
+  );
+};
