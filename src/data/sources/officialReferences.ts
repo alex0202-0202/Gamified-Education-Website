@@ -110,6 +110,15 @@ export const officialReferences: OfficialReference[] = [
     notes: 'Use only as structure/reference metadata; do not copy site pages, worksheets, PDFs, slides, or images.',
   },
   {
+    id: 'cambridge-9705-official-page',
+    publisher: 'Cambridge International Education',
+    sourceName: 'Cambridge International AS & A Level Design & Technology 9705 official qualification page',
+    sourceUrl: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-design-and-technology-9705/',
+    attributionNote: 'Original website-ready summary created for this platform from official Cambridge qualification information and supplied syllabus structures. Do not reproduce official syllabus pages directly.',
+    copyrightUse: 'summary-only',
+    notes: 'Official public reference for Cambridge International AS & A Level Design & Technology 9705, including syllabus-cycle links and qualification identity.',
+  },
+  {
     id: 'cambridge-9705-2025-2027',
     publisher: 'Cambridge International Education',
     sourceName: 'Cambridge International AS & A Level Design & Technology 9705 syllabus 2025-2027',

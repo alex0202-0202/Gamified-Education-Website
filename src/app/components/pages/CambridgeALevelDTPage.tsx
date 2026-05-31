@@ -1,14 +1,18 @@
-import { ArrowRight, BookOpen, ClipboardCheck, Factory, GraduationCap, Lightbulb, Ruler, ShieldCheck, Trophy } from 'lucide-react';
+import { ArrowRight, BookOpen, ClipboardCheck, Factory, FileText, GraduationCap, Lightbulb, ListChecks, Ruler, ShieldCheck, Trophy, Wrench } from 'lucide-react';
 import {
   cambridgeA2LevelTopics,
   cambridgeALevelDTOverview,
   cambridgeASLevelTopics,
   cambridgeAssessmentComponents,
   cambridgeAssessmentObjectives,
+  cambridgeCommandWords,
   cambridgeCommonMistakes,
+  cambridgeCourseLearningAreas,
   cambridgeCourseworkStages,
+  cambridgeExamPracticeSections,
   cambridgeHighMarkAdvice,
   cambridgeKeyConcepts,
+  cambridgeWebsiteTools,
   type ALevelDTTopic,
 } from '../../../data/cambridge-a-level-dt';
 import { getPosterResources } from '../../../data/design-skills/posterResources';
@@ -56,15 +60,31 @@ const TopicCard = ({ topic, onNavigate }: { topic: ALevelDTTopic; onNavigate: Pr
       <span className="rounded-full bg-[#F2EFE9] px-3 py-1 text-xs font-black text-[#6B665E]">{topic.level}</span>
     </div>
     <p className="mt-3 text-sm leading-6 text-[#6B665E]">{topic.studentSummary}</p>
-    <div className="mt-4 flex flex-wrap gap-2">
-      {topic.keyKnowledge.slice(0, 6).map((item) => (
-        <span key={item} className="rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-2.5 py-1 text-[10px] font-bold text-[#6B665E]">
-          {item}
-        </span>
-      ))}
+    <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div>
+        <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">Key knowledge</div>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {topic.keyKnowledge.slice(0, 8).map((item) => (
+            <span key={item} className="rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-2.5 py-1 text-[10px] font-bold text-[#6B665E]">
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div>
+        <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B]">Key skills</div>
+        <ul className="mt-2 space-y-1 text-xs leading-5 text-[#6B665E]">
+          {topic.keySkills.slice(0, 4).map((skill) => <li key={skill}>• {skill}</li>)}
+        </ul>
+      </div>
     </div>
-    <div className="mt-4 rounded-xl bg-[#FDFCFB] p-3 text-xs leading-5 text-[#8C857B]">
-      <b>Mini activity:</b> {topic.miniActivities[0]}
+    <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div className="rounded-xl bg-[#FDFCFB] p-3 text-xs leading-5 text-[#8C857B]">
+        <b>Example:</b> {topic.examples[0]}
+      </div>
+      <div className="rounded-xl bg-[#FDFCFB] p-3 text-xs leading-5 text-[#8C857B]">
+        <b>Exam prompt:</b> {topic.examPracticePrompts[0]}
+      </div>
     </div>
     <div className="mt-auto flex flex-wrap gap-2 pt-4">
       {topic.relatedTools.slice(0, 2).map((tool) => (
@@ -122,6 +142,24 @@ export const CambridgeALevelDTPage = ({ onNavigate }: Props) => {
       </section>
 
       <section className="space-y-4">
+        <SectionTitle eyebrow="Course Overview" title="What students learn in A Level Design & Technology" body="This section separates product design knowledge, communication, materials, practical making, manufacturing and wider impact so students can revise the course as a product-design pathway." />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {cambridgeCourseLearningAreas.map((area) => (
+            <article key={area.title} className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
+              <Wrench className="h-5 w-5 text-[#D5896F]" />
+              <h3 className="mt-2 text-lg font-black text-[#2C2A26]">{area.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#6B665E]">{area.summary}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {area.tools.map((tool) => (
+                  <span key={tool} className="rounded-full bg-[#F2EFE9] px-2.5 py-1 text-[10px] font-bold text-[#6B665E]">{tool}</span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
         <SectionTitle eyebrow="Key Concepts" title="Six concepts for product design thinking" body="These cards help students connect coursework and exam revision to the larger ideas of the Cambridge 9705 course." />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {cambridgeKeyConcepts.map((concept) => (
@@ -132,6 +170,11 @@ export const CambridgeALevelDTPage = ({ onNavigate }: Props) => {
               <ul className="mt-3 space-y-1 text-xs leading-5 text-[#6B665E]">
                 {concept.studentShouldLearn.slice(0, 4).map((item) => <li key={item}>• {item}</li>)}
               </ul>
+              {concept.examples && (
+                <div className="mt-3 rounded-xl bg-[#FDFCFB] p-3 text-xs leading-5 text-[#8C857B]">
+                  <b>Examples:</b> {concept.examples.slice(0, 2).join(' · ')}
+                </div>
+              )}
             </article>
           ))}
         </div>
@@ -223,6 +266,57 @@ export const CambridgeALevelDTPage = ({ onNavigate }: Props) => {
             {cambridgeCommonMistakes.map((item) => <li key={item}>• {item}</li>)}
           </ul>
         </article>
+      </section>
+
+      <section className="space-y-4">
+        <SectionTitle eyebrow="Exam Practice" title="Paper 1 and Paper 3 revision map" body="Students can use these panels to separate AS written-paper revision from full A Level industrial and manufacturing revision." />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {cambridgeExamPracticeSections.map((section) => (
+            <article key={section.title} className="rounded-2xl border border-[#E5E0D8] bg-white p-5 shadow-sm">
+              <FileText className="h-5 w-5 text-[#D5896F]" />
+              <h3 className="mt-2 text-lg font-black text-[#2C2A26]">{section.title}</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {section.facts.map((fact) => <span key={fact} className="rounded-full border border-[#E5E0D8] bg-[#F9F8F6] px-2.5 py-1 text-[10px] font-bold text-[#6B665E]">{fact}</span>)}
+              </div>
+              <ul className="mt-4 space-y-1 text-sm leading-6 text-[#6B665E]">
+                {section.practice.map((item) => <li key={item}>• {item}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <SectionTitle eyebrow="Command Words" title="How to answer Cambridge-style questions" body="These command words help students understand the depth of response expected in written papers and coursework annotations." />
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+          {cambridgeCommandWords.map((word) => (
+            <article key={word.command} className="rounded-2xl border border-[#E5E0D8] bg-white p-4 shadow-sm">
+              <div className="text-base font-black text-[#D5896F]">{word.command}</div>
+              <p className="mt-2 text-xs leading-5 text-[#6B665E]">{word.studentMeaning}</p>
+              <div className="mt-3 rounded-lg bg-[#FDFCFB] p-2 text-[11px] leading-5 text-[#8C857B]">{word.answerStyle}</div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <SectionTitle eyebrow="Interactive Website Tools" title="Tools linked to A Level coursework and exam revision" body="These are shown as planned or existing learning actions so the A Level pathway connects cleanly to the current DT tools without mixing curriculum labels." />
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {cambridgeWebsiteTools.map((tool) => (
+            <button
+              key={tool.name}
+              type="button"
+              onClick={() => tool.screen && onNavigate(tool.screen)}
+              className="rounded-2xl border border-[#E5E0D8] bg-white p-4 text-left shadow-sm transition hover:border-[#D5896F]/40 hover:bg-[#FDFCFB]"
+            >
+              <div className="flex items-center gap-2">
+                <ListChecks className="h-4 w-4 text-[#6B9080]" />
+                <span className="font-black text-[#2C2A26]">{tool.name}</span>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-[#6B665E]">{tool.purpose}</p>
+            </button>
+          ))}
+        </div>
       </section>
 
       <PosterResourceGrid

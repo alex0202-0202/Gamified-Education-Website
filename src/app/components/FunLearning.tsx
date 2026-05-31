@@ -34,6 +34,14 @@ import {
   type QuestionItem,
   type QuestionYearGroup,
 } from '../../data/questionBanks';
+import {
+  getFlashcardsForLevel,
+  getQuizQuestionsForLevel,
+  getStudyCurriculum,
+  getStudyLevel,
+  getTopicsForLevel,
+  parseStudySelection,
+} from '../../data/studyCurriculum';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -498,7 +506,7 @@ const ibMypFlashcards = [
 
 type BankId = 'dse-junior' | 'dse-senior' | 'ib-myp' | 'ib-dp';
 type TopicDef = { id: string; label: { zh: string; en: string } };
-type FlashCard = { front: { zh: string; en: string }; back: { zh: string; en: string } };
+type FlashCard = { front: { zh: string; en: string }; back: { zh: string; en: string }; topicId?: string };
 
 const yearGroupDefs: { id: string; shortLabel: string; group: 'DSE' | 'IB MYP' | 'IB DP'; bank: BankId }[] = [
   { id: 'S1', shortLabel: 'S1', group: 'DSE', bank: 'dse-junior' },
@@ -723,6 +731,24 @@ const getCurriculumLabel = (bankId: BankId, yg: string, practiceTopic?: string):
   if (bankId === 'dse-senior') return `HKDSE D&T (${yg})`;
   return `HKDSE D&T (${yg})`;
 };
+
+const studyQuestionToQuiz = (item: ReturnType<typeof getQuizQuestionsForLevel>[number]): QuizQuestion => {
+  const correct = item.options.findIndex((option) => option === item.correctAnswer);
+  return {
+    id: item.id,
+    topicId: item.topicId,
+    question: { zh: item.question, en: item.question },
+    options: item.options.map((option) => ({ zh: option, en: option })),
+    correct: correct >= 0 ? correct : 0,
+    explanation: { zh: item.explanation, en: item.explanation },
+  };
+};
+
+const studyFlashcardToCard = (item: ReturnType<typeof getFlashcardsForLevel>[number]): FlashCard => ({
+  front: { zh: item.term, en: item.term },
+  back: { zh: `${item.shortDefinition} ${item.example}`, en: `${item.shortDefinition} Example: ${item.example}` },
+  topicId: item.topicId,
+});
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -949,16 +975,36 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
   const [flashTopic, setFlashTopic] = useState('all');
   const [flashPlaying, setFlashPlaying] = useState(false);
 
+  const studySelection = parseStudySelection(activeTopic);
+  const studyCurriculum = studySelection ? getStudyCurriculum(studySelection.curriculumId) : undefined;
+  const studyLevel = studySelection ? getStudyLevel(studySelection.curriculumId, studySelection.levelId) : undefined;
+  const studyTopics = studySelection ? getTopicsForLevel(studySelection.curriculumId, studySelection.levelId) : [];
   const quizBankId = getBankId(quizYearGroup);
   const flashBankId = getBankId(flashYearGroup);
-  const allQuizQuestions = getQuizBank(quizBankId, quizYearGroup, activeTopic);
-  const allFlashCards = getFlashcards(flashBankId);
-  const activeQuizQuestions = filterQuestions(allQuizQuestions, quizBankId, quizTopic);
-  const activeFlashCards = filterCards(allFlashCards, flashBankId, flashTopic);
-  const quizTopics = getTopicsForBank(quizBankId, quizYearGroup, activeTopic);
-  const flashTopics = topicsByBank[flashBankId];
-  const quizCurrLabel = getCurriculumLabel(quizBankId, quizYearGroup, activeTopic);
-  const flashCurrLabel = getCurriculumLabel(flashBankId, flashYearGroup);
+  const allQuizQuestions = studySelection
+    ? getQuizQuestionsForLevel(studySelection.curriculumId, studySelection.levelId).map(studyQuestionToQuiz)
+    : getQuizBank(quizBankId, quizYearGroup, activeTopic);
+  const allFlashCards = studySelection
+    ? getFlashcardsForLevel(studySelection.curriculumId, studySelection.levelId).map(studyFlashcardToCard)
+    : getFlashcards(flashBankId);
+  const activeQuizQuestions = studySelection
+    ? (quizTopic === 'all' ? allQuizQuestions : allQuizQuestions.filter((question) => question.topicId === quizTopic))
+    : filterQuestions(allQuizQuestions, quizBankId, quizTopic);
+  const activeFlashCards = studySelection
+    ? (flashTopic === 'all' ? allFlashCards : allFlashCards.filter((card) => card.topicId === flashTopic))
+    : filterCards(allFlashCards, flashBankId, flashTopic);
+  const quizTopics = studySelection
+    ? studyTopics.map((topicItem) => ({ id: topicItem.id, label: { zh: topicItem.title, en: topicItem.title } }))
+    : getTopicsForBank(quizBankId, quizYearGroup, activeTopic);
+  const flashTopics = studySelection
+    ? studyTopics.map((topicItem) => ({ id: topicItem.id, label: { zh: topicItem.title, en: topicItem.title } }))
+    : topicsByBank[flashBankId];
+  const quizCurrLabel = studySelection && studyCurriculum && studyLevel
+    ? `${studyCurriculum.shortName} · ${studyLevel.label}`
+    : getCurriculumLabel(quizBankId, quizYearGroup, activeTopic);
+  const flashCurrLabel = studySelection && studyCurriculum && studyLevel
+    ? `${studyCurriculum.shortName} · ${studyLevel.label}`
+    : getCurriculumLabel(flashBankId, flashYearGroup);
 
   const handleQuizYGChange = (yg: string) => { setQuizYearGroup(yg); setQuizTopic('all'); setQuizPlaying(false); };
   const handleFlashYGChange = (yg: string) => { setFlashYearGroup(yg); setFlashTopic('all'); setFlashPlaying(false); };
@@ -1050,7 +1096,12 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
 
             {!quizPlaying && (
               <div className="px-6 pt-5 pb-5 bg-[#FDFCFB] border-b border-[#F2EFE9]">
-                <div className="mb-4">
+                {studySelection && (
+                  <div className="mb-4 rounded-xl border border-[#E5E0D8] bg-white p-3 text-sm font-bold text-[#6B665E]">
+                    {t('已鎖定所選課程：', 'Locked to selected curriculum: ')} {quizCurrLabel}
+                  </div>
+                )}
+                {!studySelection && <div className="mb-4">
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B] mb-2.5">{t('年級 / Year Group', 'Year Group')}</div>
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-1.5">
@@ -1078,7 +1129,7 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </div>}
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B] mb-2.5">{t('主題篩選 / Topic', 'Filter by Topic')}</div>
                   <div className="flex flex-wrap gap-1.5">
@@ -1181,7 +1232,12 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
 
             {!flashPlaying && (
               <div className="px-6 pt-5 pb-5 bg-[#FDFCFB] border-b border-[#F2EFE9]">
-                <div className="mb-4">
+                {studySelection && (
+                  <div className="mb-4 rounded-xl border border-[#E5E0D8] bg-white p-3 text-sm font-bold text-[#6B665E]">
+                    {t('已鎖定所選課程：', 'Locked to selected curriculum: ')} {flashCurrLabel}
+                  </div>
+                )}
+                {!studySelection && <div className="mb-4">
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B] mb-2.5">{t('年級 / Year Group', 'Year Group')}</div>
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-1.5">
@@ -1209,7 +1265,7 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </div>}
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#8C857B] mb-2.5">{t('主題篩選 / Topic', 'Filter by Topic')}</div>
                   <div className="flex flex-wrap gap-1.5">
@@ -1275,7 +1331,7 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
             <div className="p-6">
               <div className="flex flex-wrap gap-3 text-xs text-[#6B665E] mb-4">
                 <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F2EFE9] rounded-full">
-                  <Zap className="w-3.5 h-3.5 text-[#CCA068]" /> {t('52 道科技問答', '52 D&T questions')}
+                  <Zap className="w-3.5 h-3.5 text-[#CCA068]" /> {activeQuizQuestions.length} {t('道科技問答', 'D&T questions')}
                 </span>
                 <span className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F2EFE9] rounded-full">
                   <Star className="w-3.5 h-3.5 text-[#D5896F]" /> {t('XP 加速模式', 'XP Boost mode')}
@@ -1285,7 +1341,7 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                 </span>
               </div>
               <button
-                onClick={() => onNavigate('driving_game')}
+                onClick={() => onNavigate('driving_game', studySelection ? activeTopic : undefined)}
                 className="w-full py-3 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2"
                 style={{ background: 'linear-gradient(135deg, #7B68EE, #9B88FF)' }}
               >

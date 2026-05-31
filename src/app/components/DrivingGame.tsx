@@ -11,11 +11,17 @@
  *   Mobile  : Left/Right on-screen buttons  |  virtual joystick swipe
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Trophy, Star, RotateCcw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useGame } from '../context/GameContext';
+import {
+  getQuizQuestionsForLevel,
+  getStudyCurriculum,
+  getStudyLevel,
+  parseStudySelection,
+} from '../../data/studyCurriculum';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -814,23 +820,35 @@ type Particle = {
   color: string;
 };
 
-type TreeConfig = {
-  lx:    number; // left tree x-centre
-  rx:    number; // right tree x-centre
-  phase: number; // individual scroll-phase offset
-};
-
 // ─── Props ────────────────────────────────────────────────────────────────────
 
-type Props = { onBack: () => void };
+type Props = { onBack: () => void; studySelection?: string };
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export const DrivingGame = ({ onBack }: Props) => {
+const studyQuestionToDrivingQuestion = (item: ReturnType<typeof getQuizQuestionsForLevel>[number]): QuestionData => {
+  const correct = item.options.findIndex((option) => option === item.correctAnswer);
+  return {
+    q: { zh: item.question, en: item.question },
+    opts: item.options.map((option) => ({ zh: option, en: option })),
+    ans: correct >= 0 ? correct : 0,
+    xp: item.difficulty === 'hard' ? 35 : item.difficulty === 'medium' ? 25 : 20,
+  };
+};
+
+export const DrivingGame = ({ onBack, studySelection }: Props) => {
   const { t, isEnglish } = useLanguage();
   const { addXp } = useGame();
+  const parsedStudySelection = parseStudySelection(studySelection);
+  const activeQuestionBank = useMemo(() => {
+    const parsed = parseStudySelection(studySelection);
+    if (!parsed) return DT_QUESTIONS;
+    return getQuizQuestionsForLevel(parsed.curriculumId, parsed.levelId).map(studyQuestionToDrivingQuestion);
+  }, [studySelection]);
+  const selectedCurriculum = parsedStudySelection ? getStudyCurriculum(parsedStudySelection.curriculumId) : undefined;
+  const selectedLevel = parsedStudySelection ? getStudyLevel(parsedStudySelection.curriculumId, parsedStudySelection.levelId) : undefined;
 
   // ── Canvas ref ─────────────────────────────────────────────────────────────
   const canvasRef  = useRef<HTMLCanvasElement>(null);
@@ -847,7 +865,7 @@ export const DrivingGame = ({ onBack }: Props) => {
   // ── Question overlay ───────────────────────────────────────────────────────
   const [currentQ, setCurrentQ] = useState<QuestionData | null>(null);
   const [answered, setAnswered] = useState<number | null>(null); // index chosen
-  const questionQueueRef = useRef<QuestionData[]>([...DT_QUESTIONS].sort(() => Math.random() - 0.5));
+  const questionQueueRef = useRef<QuestionData[]>([...activeQuestionBank].sort(() => Math.random() - 0.5));
 
   // ── HUD state (synced from game loop) ─────────────────────────────────────
   const [hudScore,   setHudScore]   = useState(0);
@@ -879,7 +897,6 @@ export const DrivingGame = ({ onBack }: Props) => {
   const obstaclesRef   = useRef<Obstacle[]>([]);
   const fuelRef        = useRef<FuelCapsule[]>([]);
   const particlesRef   = useRef<Particle[]>([]);
-  const treeConfigsRef = useRef<TreeConfig[]>([]);
   const idCounterRef   = useRef(0);
   const spawnTimerRef = useRef(0);
   const checkpointRef = useRef(0); // question every N seconds
@@ -980,13 +997,13 @@ export const DrivingGame = ({ onBack }: Props) => {
   // ── Show question ─────────────────────────────────────────────────────────
   const showQuestion = useCallback(() => {
     if (questionQueueRef.current.length === 0) {
-      questionQueueRef.current = [...DT_QUESTIONS].sort(() => Math.random() - 0.5);
+      questionQueueRef.current = [...activeQuestionBank].sort(() => Math.random() - 0.5);
     }
     const q = questionQueueRef.current.pop()!;
     setCurrentQ(q);
     setAnswered(null);
     setPhaseSync('question');
-  }, [setPhaseSync]);
+  }, [activeQuestionBank, setPhaseSync]);
 
   const handleAnswer = useCallback((idx: number) => {
     if (answered !== null || !currentQ) return;
@@ -1242,15 +1259,10 @@ export const DrivingGame = ({ onBack }: Props) => {
     obstaclesRef.current    = [];
     fuelRef.current         = [];
     particlesRef.current    = [];
-    treeConfigsRef.current  = Array.from({ length: 8 }, (_, i) => ({
-      lx:    20 + Math.random() * 14,
-      rx:    CANVAS_W - 20 - Math.random() * 14,
-      phase: i * 15 + Math.random() * 8,
-    }));
     idCounterRef.current    = 0;
     lastTimeRef.current     = performance.now();
     hudTimerRef.current     = 0;
-    questionQueueRef.current = [...DT_QUESTIONS].sort(() => Math.random() - 0.5);
+    questionQueueRef.current = [...activeQuestionBank].sort(() => Math.random() - 0.5);
     keysRef.current = { left: false, right: false, accel: false };
     setHudScore(0);
     setHudTime(GAME_DURATION);
@@ -1258,7 +1270,7 @@ export const DrivingGame = ({ onBack }: Props) => {
     setHudXp(0);
     setBoostActive(false);
     setPhaseSync('playing');
-  }, [setPhaseSync]);
+  }, [activeQuestionBank, setPhaseSync]);
 
   // ── The RAF loop ──────────────────────────────────────────────────────────
 
@@ -1394,26 +1406,23 @@ export const DrivingGame = ({ onBack }: Props) => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
       drawRoad(ctx, roadOffsetRef.current);
 
-      // Roadside trees – random lateral positions, two-tier pine style
-      treeConfigsRef.current.forEach(tc => {
-        const ty = (roadOffsetRef.current * 4 + tc.phase) % (CANVAS_H + 60) - 30;
-        // Left tree
-        ctx.fillStyle = '#1A6B20';
+      // Wind and speed lines replace roadside trees so the focus stays on motion.
+      for (let i = 0; i < 18; i++) {
+        const y = (roadOffsetRef.current * (2.2 + (i % 3) * 0.35) + i * 38) % (CANVAS_H + 70) - 35;
+        const lineLength = 18 + (i % 4) * 9 + (boostActiveRef.current ? 14 : 0);
+        const leftX = 14 + (i % 5) * 8;
+        const rightX = CANVAS_W - 14 - (i % 5) * 8;
+        const alpha = 0.22 + (i % 4) * 0.08;
+        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+        ctx.lineWidth = i % 3 === 0 ? 3 : 2;
+        ctx.lineCap = 'round';
         ctx.beginPath();
-        ctx.moveTo(tc.lx - 12, ty + 40); ctx.lineTo(tc.lx + 12, ty + 40); ctx.lineTo(tc.lx, ty + 10); ctx.closePath(); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(tc.lx - 9, ty + 28); ctx.lineTo(tc.lx + 9, ty + 28); ctx.lineTo(tc.lx, ty); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = '#4a3000';
-        ctx.fillRect(tc.lx - 2, ty + 38, 4, 14);
-        // Right tree
-        ctx.fillStyle = '#1A6B20';
-        ctx.beginPath();
-        ctx.moveTo(tc.rx - 12, ty + 40); ctx.lineTo(tc.rx + 12, ty + 40); ctx.lineTo(tc.rx, ty + 10); ctx.closePath(); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(tc.rx - 9, ty + 28); ctx.lineTo(tc.rx + 9, ty + 28); ctx.lineTo(tc.rx, ty); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = '#4a3000';
-        ctx.fillRect(tc.rx - 2, ty + 38, 4, 14);
-      });
+        ctx.moveTo(leftX, y);
+        ctx.lineTo(leftX + lineLength, y + 8);
+        ctx.moveTo(rightX, y);
+        ctx.lineTo(rightX - lineLength, y + 8);
+        ctx.stroke();
+      }
 
       // Objects
       fuelRef.current.forEach(f => drawFuel(ctx, f));
@@ -1470,7 +1479,11 @@ export const DrivingGame = ({ onBack }: Props) => {
         </button>
         <div>
           <h1 className="text-lg font-bold text-[#2C2A26]">{t('D&T 賽車學習遊戲', 'D&T Racing Learning Game')}</h1>
-          <p className="text-xs text-[#8C857B]">{t('收集金幣・答題贏XP・啟動加速', 'Collect coins · Answer questions · Activate boost')}</p>
+          <p className="text-xs text-[#8C857B]">
+            {selectedCurriculum && selectedLevel
+              ? `${selectedCurriculum.shortName} · ${selectedLevel.label} · ${activeQuestionBank.length} questions`
+              : t('收集金幣・答題贏XP・啟動加速', 'Collect coins · Answer questions · Activate boost')}
+          </p>
         </div>
       </div>
 
@@ -1642,10 +1655,10 @@ export const DrivingGame = ({ onBack }: Props) => {
                     padding: 20, borderRadius: 12,
                   }}
                 >
-                  <div className="text-xs font-black text-[#CCA068] uppercase tracking-widest mb-2">
+                  <div className="text-sm font-black text-[#CCA068] uppercase tracking-widest mb-3">
                     🎯 {t('知識問題！', 'Knowledge Challenge!')}
                   </div>
-                  <div className="text-white font-bold text-center text-sm mb-5 leading-relaxed px-2">
+                  <div className="text-white font-black text-center text-lg mb-6 leading-relaxed px-2 md:text-xl">
                     {isEnglish ? currentQ.q.en : currentQ.q.zh}
                   </div>
                   <div className="w-full space-y-2">
@@ -1665,9 +1678,9 @@ export const DrivingGame = ({ onBack }: Props) => {
                           onClick={() => handleAnswer(i)}
                           disabled={answered !== null}
                           style={{
-                            width: '100%', padding: '10px 14px',
+                            width: '100%', padding: '14px 16px',
                             background: bg, border, borderRadius: 10,
-                            color: textColor, fontWeight: 'bold', fontSize: '0.82rem',
+                            color: textColor, fontWeight: 'bold', fontSize: '1rem',
                             textAlign: 'left', cursor: answered !== null ? 'default' : 'pointer',
                             transition: 'all 0.25s',
                           }}

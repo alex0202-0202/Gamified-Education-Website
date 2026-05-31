@@ -86,12 +86,12 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
 
   const switchToDSE = () => {
     setSelectedLevel(lastDSELevel);
-    onNavigate('dashboard');
+    onNavigate('dashboard', 'HKDSE_DNT');
   };
   const switchToIB = () => {
     if (selectedLevel !== 'IB') setLastDSELevel(selectedLevel as 'S1' | 'S2' | 'S3' | 'S4_S6');
     setSelectedLevel('IB');
-    onNavigate('dashboard');
+    onNavigate('dashboard', 'IB_DESIGN');
   };
 
   // Navigation items mapping based on EDB Curriculum
@@ -204,6 +204,8 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
 
   const allItems = navGroups.flatMap(g => g.items);
   const labelOverrides: Record<string, string> = {
+    dashboard: 'Study Curriculum',
+    legacy_dashboard: 'Legacy Curriculum Dashboard',
     hkdse_thematic_resources: 'DAT 主題式學與教資源',
     hkdse_case_studies: 'DAT 個案研究',
     hkdse_sba_support: 'DAT SBA Support',
@@ -237,15 +239,17 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
     ? (isEnglish ? SENIOR_LABELS[activeTopic]?.en ?? 'Senior Module' : SENIOR_LABELS[activeTopic]?.zh ?? '高中模組')
     : tr(labelOverrides[currentScreen] ?? activeItem?.label ?? '學習概覽');
 
-  const levelHeader = selectedLevel === 'S1'
-    ? t('中一 · HKDSE', 'Secondary 1 · HKDSE')
-    : selectedLevel === 'S2'
-      ? t('中二 · HKDSE', 'Secondary 2 · HKDSE')
-      : selectedLevel === 'S3'
-        ? t('中三 · HKDSE', 'Secondary 3 · HKDSE')
-        : selectedLevel === 'S4_S6'
-          ? t('高中 (S4-S6) · HKDSE DAT', 'Senior Secondary (S4-S6) · HKDSE DAT')
-          : t('IB 文憑課程 · Design Technology', 'IB Diploma · Design Technology');
+  const levelHeader = currentScreen === 'dashboard'
+    ? 'Study Curriculum'
+    : selectedLevel === 'S1'
+      ? t('中一 · HKDSE', 'Secondary 1 · HKDSE')
+      : selectedLevel === 'S2'
+        ? t('中二 · HKDSE', 'Secondary 2 · HKDSE')
+        : selectedLevel === 'S3'
+          ? t('中三 · HKDSE', 'Secondary 3 · HKDSE')
+          : selectedLevel === 'S4_S6'
+            ? t('高中 (S4-S6) · HKDSE DAT', 'Senior Secondary (S4-S6) · HKDSE DAT')
+            : t('IB 文憑課程 · Design Technology', 'IB Diploma · Design Technology');
 
   return (
     <div className="flex h-screen flex-col bg-[#F9F8F6] text-[#4A4741] overflow-hidden font-sans selection:bg-[#D5896F] selection:text-white lg:flex-row">
@@ -254,47 +258,58 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
         <div className="border-b border-[#E5E0D8] bg-[#FDFCFB] p-4 lg:p-6">
           <div className="flex items-center space-x-2 text-[#D5896F] mb-2">
             <GraduationCap className="w-6 h-6" />
-            <span className="text-xs font-bold uppercase tracking-widest">{t('IB + HKDSE 設計科技', 'IB + HKDSE Design Technology')}</span>
+            <span className="text-xs font-bold uppercase tracking-widest">{t('HKDSE · IB · A Level', 'HKDSE · IB · A Level')}</span>
           </div>
           <h1 className="text-xl font-bold tracking-tight text-[#2C2A26] leading-tight">
             Design Technology Lab<br/>
-            <span className="text-base font-normal text-[#6B665E]">{t('IB DT · HKDSE DAT', 'IB DT · HKDSE DAT')}</span>
+            <span className="text-base font-normal text-[#6B665E]">Study Curriculum</span>
           </h1>
         </div>
 
-        {/* Level Selector */}
+        {/* Curriculum Selector */}
         <div className="border-b border-[#E5E0D8] px-4 py-3 lg:px-5">
-          <div className="flex bg-[#F2EFE9] p-1 rounded-lg flex-wrap gap-1">
-            {(['S1', 'S2', 'S3', 'S4_S6', 'IB'] as const).map((level) => (
-              <button
-                key={level}
-                onClick={() => {
-                  setSelectedLevel(level);
-                  onNavigate('dashboard');
-                }}
-                className={clsx(
-                  "flex-1 py-1.5 px-2 text-xs font-bold rounded-md transition-all text-center min-w-[40px]",
-                  selectedLevel === level
-                    ? "bg-white text-[#2C2A26] shadow-sm"
-                    : "text-[#8C857B] hover:text-[#4A4741]"
-                )}
-              >
-                {level === 'S4_S6'
-                  ? t('高中', 'S4-S6')
-                  : level === 'IB'
-                    ? 'IB'
-                    : level === 'S1'
-                      ? t('中一', 'S1')
-                      : level === 'S2'
-                        ? t('中二', 'S2')
-                        : t('中三', 'S3')}
-              </button>
-            ))}
+          <div className="mb-2 text-[10px] font-black uppercase tracking-widest text-[#A8A29A]">
+            {t('課程選擇', 'Curriculum')}
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            <button
+              onClick={switchToDSE}
+              className={clsx(
+                'rounded-lg border px-2 py-2 text-xs font-black transition',
+                currentScreen === 'dashboard' && activeTopic?.startsWith('HKDSE_DNT')
+                  ? 'border-[#D5896F]/40 bg-[#FFF5F0] text-[#D5896F]'
+                  : 'border-[#E5E0D8] bg-white text-[#6B665E] hover:bg-[#F9F8F6]'
+              )}
+            >
+              HKDSE
+            </button>
+            <button
+              onClick={switchToIB}
+              className={clsx(
+                'rounded-lg border px-2 py-2 text-xs font-black transition',
+                currentScreen === 'dashboard' && activeTopic?.startsWith('IB_DESIGN')
+                  ? 'border-[#6B9080]/40 bg-[#F1F7F2] text-[#6B9080]'
+                  : 'border-[#E5E0D8] bg-white text-[#6B665E] hover:bg-[#F9F8F6]'
+              )}
+            >
+              IB
+            </button>
+            <button
+              onClick={() => onNavigate('dashboard', 'A_LEVEL_DT')}
+              className={clsx(
+                'rounded-lg border px-2 py-2 text-xs font-black transition',
+                currentScreen === 'dashboard' && activeTopic?.startsWith('A_LEVEL_DT')
+                  ? 'border-[#7B8FA1]/40 bg-[#F2F5F7] text-[#66788A]'
+                  : 'border-[#E5E0D8] bg-white text-[#6B665E] hover:bg-[#F9F8F6]'
+              )}
+            >
+              A Level
+            </button>
           </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto p-4 lg:p-5">
-          {navGroups.map((group, idx) => (
+          {currentScreen !== 'dashboard' && navGroups.map((group, idx) => (
             <div key={idx} className="mb-5">
               <div className="text-xs font-bold text-[#A8A29A] uppercase mb-2 px-3 tracking-wider">
                 {tr(group.title)}
@@ -567,27 +582,37 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            {/* DSE / IB Global Toggle */}
+            {/* Study curriculum quick switch */}
             <div className="flex items-center bg-[#F2EFE9] border border-[#E5E0D8] rounded-full p-1 shadow-sm">
               <button
                 onClick={switchToDSE}
                 className={`px-4 py-1.5 rounded-full text-xs font-black transition-all ${
-                  selectedLevel !== 'IB'
+                  currentScreen === 'dashboard' && activeTopic?.startsWith('HKDSE_DNT')
                     ? 'bg-[#D5896F] text-white shadow-sm'
                     : 'text-[#8C857B] hover:text-[#4A4741]'
                 }`}
               >
-                DSE
+                HKDSE
               </button>
               <button
                 onClick={switchToIB}
                 className={`px-4 py-1.5 rounded-full text-xs font-black transition-all ${
-                  selectedLevel === 'IB'
+                  currentScreen === 'dashboard' && activeTopic?.startsWith('IB_DESIGN')
                     ? 'bg-[#6B9080] text-white shadow-sm'
                     : 'text-[#8C857B] hover:text-[#4A4741]'
                 }`}
               >
                 IB
+              </button>
+              <button
+                onClick={() => onNavigate('dashboard', 'A_LEVEL_DT')}
+                className={`px-4 py-1.5 rounded-full text-xs font-black transition-all ${
+                  currentScreen === 'dashboard' && activeTopic?.startsWith('A_LEVEL_DT')
+                    ? 'bg-[#7B8FA1] text-white shadow-sm'
+                    : 'text-[#8C857B] hover:text-[#4A4741]'
+                }`}
+              >
+                A Level
               </button>
             </div>
 

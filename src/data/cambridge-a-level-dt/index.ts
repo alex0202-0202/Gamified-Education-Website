@@ -1,7 +1,7 @@
 import type { SourceMetadata } from '../types';
 import { sourceById } from '../sources/officialReferences';
 
-const sourceMetadata: SourceMetadata = sourceById('cambridge-9705-2028-2030');
+const sourceMetadata: SourceMetadata = sourceById('cambridge-9705-official-page');
 
 export type ALevelDTTopic = {
   id: string;
@@ -9,6 +9,7 @@ export type ALevelDTTopic = {
   topicNumber: number;
   title: string;
   studentSummary: string;
+  syllabusFocus?: string[];
   keyKnowledge: string[];
   keySkills: string[];
   vocabulary: { term: string; definition: string }[];
@@ -46,7 +47,20 @@ export type ALevelDTKeyConcept = {
   title: string;
   meaning: string;
   studentShouldLearn: string[];
+  examples?: string[];
   activities: string[];
+};
+
+export type ALevelDTCommandWord = {
+  command: string;
+  studentMeaning: string;
+  answerStyle: string;
+};
+
+export type ALevelDTWebsiteTool = {
+  name: string;
+  purpose: string;
+  screen?: string;
 };
 
 export const cambridgeALevelDTOverview = {
@@ -71,6 +85,7 @@ export const cambridgeKeyConcepts: ALevelDTKeyConcept[] = [
     title: 'Designing and Making in Society',
     meaning: 'Design changes how people live, work, travel, communicate and use products.',
     studentShouldLearn: ['user needs and values', 'product change over time', 'usability and safety', 'accessibility and quality of life'],
+    examples: ['chair redesigned for elderly users', 'water bottle redesigned for easier grip', 'packaging redesigned to reduce waste'],
     activities: ['Analyse one everyday product', 'Map who uses the product', 'Explain how the product changed over time', 'Identify the problem it solves'],
   },
   {
@@ -78,6 +93,7 @@ export const cambridgeKeyConcepts: ALevelDTKeyConcept[] = [
     title: 'Industrial and Commercial Practices',
     meaning: 'Designers need to understand how products are planned, manufactured, checked, costed and sold.',
     studentShouldLearn: ['one-off, batch and mass production', 'quality assurance and quality control', 'production planning', 'cost, time, labour and marketability'],
+    examples: ['one-off custom furniture', 'batch production of school trophies', 'mass production of phone cases'],
     activities: ['Compare one-off, batch and mass production', 'Build a quality-control checklist', 'Plan a small production route'],
   },
   {
@@ -85,6 +101,7 @@ export const cambridgeKeyConcepts: ALevelDTKeyConcept[] = [
     title: 'Design Communication',
     meaning: 'Designers use drawings, models and technical language so other people can understand, test and manufacture ideas.',
     studentShouldLearn: ['freehand sketches', 'orthographic projection', 'isometric and exploded views', 'CAD, flowcharts and Gantt charts'],
+    examples: ['orthographic drawing for manufacture', 'exploded view showing assembly order', 'Gantt chart for project planning'],
     activities: ['Use the orthographic tool', 'Create an exploded view annotation', 'Make a technical drawing vocabulary quiz'],
   },
   {
@@ -92,6 +109,7 @@ export const cambridgeKeyConcepts: ALevelDTKeyConcept[] = [
     title: 'Creative Thinking',
     meaning: 'Creative thinking helps students move beyond the first idea and develop original, useful and better solutions.',
     studentShouldLearn: ['SCAMPER', 'iteration', 'design fixation avoidance', 'concept selection and development'],
+    examples: ['folding phone stand', 'adjustable cable slot', 'recyclable material substitution'],
     activities: ['Use SCAMPER on an existing product', 'Create three improvement concepts', 'Justify the best concept against a specification'],
   },
   {
@@ -99,6 +117,7 @@ export const cambridgeKeyConcepts: ALevelDTKeyConcept[] = [
     title: 'Sustainable Design',
     meaning: 'Products affect the environment through material extraction, manufacture, transport, use, repair and disposal.',
     studentShouldLearn: ['life cycle thinking', 'repair and maintenance', 'waste reduction', 'local, recycled and sustainable material choices'],
+    examples: ['repairable lamp', 'flat-pack packaging', 'standardised replaceable components'],
     activities: ['Life-cycle audit', 'Design for disassembly challenge', 'Material waste reduction plan'],
   },
   {
@@ -106,7 +125,41 @@ export const cambridgeKeyConcepts: ALevelDTKeyConcept[] = [
     title: 'Emerging Technologies',
     meaning: 'Digital and modern technologies change how products are modelled, tested, manufactured and improved.',
     studentShouldLearn: ['CAD/CAM', 'laser cutting', '3D printing', 'CNC, simulation and smart materials'],
+    examples: ['laser-cut test piece', '3D printed prototype', 'CAD simulation before manufacture'],
     activities: ['CAD/CAM matching game', '3D printing settings check', 'Laser kerf test planning'],
+  },
+];
+
+export const cambridgeCourseLearningAreas = [
+  {
+    title: 'Product Design',
+    summary: 'Identify user needs and create useful, safe, attractive and responsible products.',
+    tools: ['Product analysis builder', 'Design brief builder', 'Specification generator'],
+  },
+  {
+    title: 'Design Communication',
+    summary: 'Use sketches, CAD, orthographic drawings, exploded views, models and specialist vocabulary.',
+    tools: ['Orthographic projection tool', 'CAD workspace', 'Drawing vocabulary quiz'],
+  },
+  {
+    title: 'Materials & Processes',
+    summary: 'Understand materials, components, joining, forming, finishing and manufacturing methods.',
+    tools: ['Materials database', 'Joining selector', 'Process selector'],
+  },
+  {
+    title: 'Prototyping & Making',
+    summary: 'Plan, model, make, test and refine product solutions safely and accurately.',
+    tools: ['Finger joint box maker', 'Risk assessment builder', 'Prototype diary'],
+  },
+  {
+    title: 'Industrial & Commercial Practice',
+    summary: 'Understand how products are manufactured, costed, checked, marketed and produced in quantity.',
+    tools: ['Batch planner', 'Quality control simulator', 'Costing calculator'],
+  },
+  {
+    title: 'Sustainability & Society',
+    summary: 'Consider environmental, social, cultural, ethical and economic impact across a product life cycle.',
+    tools: ['Life cycle checker', 'Repairability rating', 'Sustainability comparison'],
   },
 ];
 
@@ -163,6 +216,7 @@ const topic = (
   topicNumber,
   title,
   studentSummary,
+  syllabusFocus: keyKnowledge.slice(0, 8),
   keyKnowledge,
   keySkills,
   vocabulary: keyKnowledge.slice(0, 5).map((term) => ({ term, definition: `Explain how ${term.toLowerCase()} affects product design decisions.` })),
@@ -182,7 +236,7 @@ export const cambridgeASLevelTopics: ALevelDTTopic[] = [
   topic(5, 'AS_AND_A2', 'Sustainable Design', 'Design with full product life cycle, material use, repair, disposal and waste reduction in mind.', ['sustainable materials', 'packaging responsibility', 'raw material extraction', 'energy consumption', 'repair', 'maintenance', 'disposal', 'design for disassembly'], ['life-cycle analysis', 'waste reduction planning', 'justify sustainable choices'], ['repairable lamp', 'flat-pack packaging redesign'], [{ label: 'Materials Database', screen: 'materials_db' }]),
   topic(6, 'AS_AND_A2', 'Health and Safety', 'Use risk assessment and safe workshop practice when designing and making.', ['hazards', 'risk assessment', 'PPE', 'machine guards', 'manual handling', 'supervision', 'emergency action'], ['write risk assessments', 'choose PPE', 'plan safer manufacturing'], ['pillar drill safety plan', 'laser-cutting safety checklist']),
   topic(7, 'AS_AND_A2', 'Aesthetics and Ergonomics', 'Balance visual qualities with human body data, comfort, safety and usability.', ['line', 'colour', 'shape', 'proportion', 'form', 'texture', 'ergonomics', 'anthropometrics', 'BMI'], ['analyse appearance', 'apply anthropometric data', 'justify comfort and usability'], ['chair height selection', 'handle redesign'], [{ label: 'IB DP Ergonomics', screen: 'ib_current_2026', topic: 'ib-dp-2026-topic-1' }]),
-  topic(8, 'AS_AND_A2', 'Materials and Components', 'Choose materials and components based on properties, processing, joining, safety and sustainability.', ['papers and boards', 'woods', 'metals', 'polymers', 'composites', 'smart materials', 'biodegradable materials', 'components'], ['select materials', 'compare properties', 'match joining methods'], ['plywood phone stand', 'acrylic display case'], [{ label: 'Materials Database', screen: 'materials_db' }, { label: 'Joining Methods', screen: 'joining_methods' }]),
+  topic(8, 'AS_AND_A2', 'Materials and Components', 'Choose materials and components based on properties, processing, joining, safety and sustainability.', ['papers and boards', 'woods and manufactured boards', 'ferrous and non-ferrous metals', 'brass', 'polymers', 'fluted/corrugated polypropylene', 'rubber', 'composites', 'smart and modern materials', 'biodegradable materials', 'components'], ['select materials', 'compare properties', 'match joining methods', 'justify material choice using function, cost, safety and sustainability'], ['plywood phone stand', 'acrylic display case', 'rubber grip detail', 'brass decorative fitting'], [{ label: 'Materials Database', screen: 'materials_db' }, { label: 'Joining Methods', screen: 'joining_methods' }]),
   topic(9, 'AS_AND_A2', 'Stages in Materials Processing', 'Understand how raw materials move through preparation, forming, shaping, joining, finishing and quality checking.', ['raw material source', 'preparation', 'conversion', 'forming', 'shaping', 'joining', 'finishing', 'quality checking', 'assembly'], ['sequence processes', 'explain manufacturing stages', 'identify checking points'], ['timber-to-stool process', 'card package process']),
   topic(10, 'AS_AND_A2', 'Materials Processing', 'Select appropriate cutting, shaping, forming, joining, finishing and CAD/CAM methods.', ['cutting', 'shaping', 'forming', 'joining', 'finishing', 'laser cutting', '3D printing', 'CNC'], ['choose processes', 'compare speed/cost/quality', 'plan making'], ['laser-cut box', 'vacuum-formed tray'], [{ label: 'Finger Box Maker', screen: 'finger_joint_box_maker' }, { label: 'Joining Methods', screen: 'joining_methods' }]),
   topic(11, 'AS_AND_A2', 'Energy and Control Systems', 'Explain how systems use energy, inputs, processing, outputs, sensors and feedback.', ['energy sources', 'energy transfer', 'mechanical systems', 'electronic systems', 'sensors', 'input-process-output', 'feedback'], ['draw block diagrams', 'match sensors to functions', 'explain control loops'], ['automatic door', 'temperature-controlled fan'], [{ label: 'Systems Game', screen: 'systems' }]),
@@ -193,7 +247,7 @@ export const cambridgeA2LevelTopics: ALevelDTTopic[] = [
   topic(13, 'A2', 'Industrial Practices', 'Plan and evaluate production systems, workflow, tooling, jigs, fixtures and industrial constraints.', ['industrial production systems', 'workflow planning', 'tooling', 'jigs and fixtures', 'standardised components', 'workforce', 'machinery'], ['plan production lines', 'identify bottlenecks', 'choose jigs and fixtures'], ['assembly line for 10 lamps', 'jig for drilling repeated holes']),
   topic(14, 'A2', 'Business and Commercial Practices', 'Connect product design with market research, target users, costing, branding, intellectual property and viability.', ['market research', 'target market', 'branding', 'pricing', 'production cost', 'profitability', 'product lifecycle', 'intellectual property'], ['build pitch arguments', 'estimate costs', 'write market research questions'], ['student desk product pitch', 'costed storage product']),
   topic(15, 'A2', 'Quantity Production', 'Plan one-off, batch, mass or continuous production with repeatability, standardisation and quality checks.', ['one-off production', 'batch production', 'mass production', 'continuous production', 'economies of scale', 'repeatability', 'standardisation'], ['manufacture 10 units planning', 'sequence operations', 'plan inspection'], ['batch of ten desk organisers', 'standardised school badge holder']),
-  topic(16, 'A2', 'Materials Processing in Industry', 'Understand industrial cutting, forming, casting, moulding, fabrication, CNC, automation and finishing.', ['industrial cutting', 'forming', 'casting', 'moulding', 'fabrication', 'CNC machining', 'automated assembly', 'heat treatment'], ['select industrial processes', 'compare cost/quality/speed', 'explain automated manufacturing'], ['injection-moulded casing', 'CNC-machined aluminium bracket']),
+  topic(16, 'A2', 'Materials Processing in Industry', 'Understand industrial cutting, forming, casting, moulding, fabrication, CNC, automation and finishing.', ['industrial cutting', 'forming', 'casting', 'moulding', 'fabrication', 'CNC machining', 'automated assembly', 'industrial joining', 'solvent cement such as Tensol 12', 'heat treatment'], ['select industrial processes', 'compare cost/quality/speed', 'explain automated manufacturing', 'justify permanent and temporary joining methods'], ['injection-moulded casing', 'CNC-machined aluminium bracket', 'solvent-cemented acrylic display product']),
   topic(17, 'A2', 'Quality Systems', 'Use assurance, control, tolerance, standardisation, testing and inspection to prevent and identify faults.', ['quality assurance', 'quality control', 'tolerance', 'standardisation', 'testing', 'inspection'], ['build QC checklists', 'calculate tolerances', 'spot defects in a batch'], ['checking ten identical boxes', 'go/no-go gauge for holes']),
   topic(18, 'A2', 'Digital Technology', 'Use digital tools and smart technologies for modelling, production, testing, collaboration and data-led decisions.', ['CAD', 'CAM', 'CNC', '3D printing', 'laser cutting', 'simulation', 'collaborative design', 'data-led design', 'smart products'], ['choose digital tools', 'explain workflow', 'evaluate digital manufacturing impact'], ['cloud CAD collaboration', 'laser-cut and 3D printed hybrid product'], [{ label: 'Orthographic/CAD', screen: 'orthographic_projection' }, { label: 'Finger Box Maker', screen: 'finger_joint_box_maker' }]),
 ];
@@ -233,4 +287,46 @@ export const cambridgeCommonMistakes = [
   'Little evidence of iteration or development.',
   'No manufacturing plan or quality-control thinking.',
   'Ignoring cost, safety, sustainability or user needs.',
+];
+
+export const cambridgeCommandWords: ALevelDTCommandWord[] = [
+  { command: 'State', studentMeaning: 'Give a short factual answer.', answerStyle: 'One clear point.' },
+  { command: 'Identify', studentMeaning: 'Name or recognise something.', answerStyle: 'Point out the correct feature, material, process or issue.' },
+  { command: 'Describe', studentMeaning: 'Say what something is like.', answerStyle: 'Give details, features or steps.' },
+  { command: 'Explain', studentMeaning: 'Give reasons why or how.', answerStyle: 'Use point + because + effect.' },
+  { command: 'Compare', studentMeaning: 'Show similarities and differences.', answerStyle: 'Refer to both products, processes or materials.' },
+  { command: 'Analyse', studentMeaning: 'Break down and discuss meaning or effect.', answerStyle: 'Explain relationships, causes and design impact.' },
+  { command: 'Evaluate', studentMeaning: 'Judge using evidence.', answerStyle: 'Use strengths, weaknesses, evidence and a conclusion.' },
+  { command: 'Justify', studentMeaning: 'Give strong reasons for a design decision.', answerStyle: 'Link to user need, specification, testing, manufacture or sustainability.' },
+  { command: 'Discuss', studentMeaning: 'Consider different viewpoints.', answerStyle: 'Give a balanced argument before reaching a judgement.' },
+  { command: 'Suggest', studentMeaning: 'Give a suitable idea or improvement.', answerStyle: 'Make it realistic and linked to the problem.' },
+];
+
+export const cambridgeWebsiteTools: ALevelDTWebsiteTool[] = [
+  { name: 'Product Analysis Builder', purpose: 'Analyse function, user, materials, process, safety and sustainability.', screen: 'project_hub' },
+  { name: 'Design Brief Builder', purpose: 'Turn a design problem into a clear direction for coursework.', screen: 'project_hub' },
+  { name: 'Specification Generator', purpose: 'Convert user needs into measurable requirements.', screen: 'project_hub' },
+  { name: 'SCAMPER Idea Generator', purpose: 'Develop creative product improvement ideas.', screen: 'project_hub' },
+  { name: 'Orthographic Projection Tool', purpose: 'Practise plan, elevation, side and section views.', screen: 'orthographic_projection' },
+  { name: 'Materials Selector', purpose: 'Choose suitable materials using properties, process, cost and sustainability.', screen: 'materials_db' },
+  { name: 'Process Selector', purpose: 'Match materials to cutting, shaping, forming, joining and finishing methods.', screen: 'materials_db' },
+  { name: 'Joining Method Selector', purpose: 'Select suitable joints and adhesives for practical making.', screen: 'joining_methods' },
+  { name: 'Risk Assessment Builder', purpose: 'Record hazards, controls and residual risks for practical work.', screen: 'project_hub' },
+  { name: 'Evaluation Table Builder', purpose: 'Compare tests, user feedback and specification results.', screen: 'project_hub' },
+  { name: 'Manufacturing in Quantity Planner', purpose: 'Plan a batch of at least ten products with QA and QC.', screen: 'project_hub' },
+  { name: 'Quality Control Simulator', purpose: 'Practise tolerance, inspection and batch checking.', screen: 'fun_learning' },
+  { name: 'CAD/CAM Workflow Tool', purpose: 'Connect CAD files, CAM setup, laser cutting and 3D printing.', screen: 'orthographic_projection' },
+];
+
+export const cambridgeExamPracticeSections = [
+  {
+    title: 'Paper 1 — AS Written Paper',
+    facts: ['AS Topics 1-12', '2 hr 15 min', '100 marks', 'Externally assessed'],
+    practice: ['topic quizzes 1-12', 'product analysis questions', 'materials and processes questions', 'drawing communication questions', 'sustainability questions', 'health and safety prompts'],
+  },
+  {
+    title: 'Paper 3 — A Level Written Paper',
+    facts: ['A Level Topics 13-18 plus AS knowledge', '2 hr 30 min', '100 marks', 'Externally assessed'],
+    practice: ['industrial practice questions', 'business and commercial practice prompts', 'quantity production planning', 'quality systems cases', 'digital technology evaluation', 'manufacturing in quantity case studies'],
+  },
 ];

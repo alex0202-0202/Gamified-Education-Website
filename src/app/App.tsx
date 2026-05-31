@@ -20,6 +20,7 @@ import { IBSubtopicDetail } from './components/IBSubtopicDetail';
 import { IBResourceDetail } from './components/IBResourceDetail';
 import { ProjectHub } from './components/ProjectHub';
 import { CambridgeALevelDTPage } from './components/pages/CambridgeALevelDTPage';
+import { StudyCurriculumPage } from './components/pages/StudyCurriculumPage';
 import {
   DATCaseStudiesPage,
   DATSbaSupportPage,
@@ -91,6 +92,8 @@ function AppContent() {
       case 'cambridge_alevel_dt':
         return <CambridgeALevelDTPage onNavigate={handleNavigate} />;
       case 'dashboard':
+        return <StudyCurriculumPage onNavigate={handleNavigate} activeTopic={activeTopic} />;
+      case 'legacy_dashboard':
         return <LevelSelect onNavigate={handleNavigate} activeTopic={activeTopic} />;
       case 'safety':
         return <SafetyInspector />;
@@ -107,7 +110,7 @@ function AppContent() {
       case 'hkdse_resources':
         return <HKDSEResources activeTopic={activeTopic} onNavigate={handleNavigate} />;
       case 'senior_module':
-        return activeTopic ? <SeniorModuleStudio moduleId={activeTopic as SeniorModuleId} onNavigate={handleNavigate} /> : <LevelSelect onNavigate={handleNavigate} activeTopic={activeTopic} />;
+        return activeTopic ? <SeniorModuleStudio moduleId={activeTopic as SeniorModuleId} onNavigate={handleNavigate} /> : <StudyCurriculumPage onNavigate={handleNavigate} activeTopic={activeTopic} />;
       case 'resource_hub':
         return <ResourceHub activeTopic={activeTopic} onNavigate={handleNavigate} />;
       case 'ib_resources':
@@ -145,11 +148,11 @@ function AppContent() {
       case 'driving_game':
         return (
           <Suspense fallback={<div className="text-sm text-[#8C857B]">Loading Design Technology game...</div>}>
-            <DrivingGame onBack={() => handleNavigate('fun_learning')} />
+            <DrivingGame onBack={() => handleNavigate('fun_learning', activeTopic)} studySelection={activeTopic} />
           </Suspense>
         );
       default:
-        return <LevelSelect onNavigate={handleNavigate} activeTopic={activeTopic} />;
+        return <StudyCurriculumPage onNavigate={handleNavigate} activeTopic={activeTopic} />;
     }
   };
 
