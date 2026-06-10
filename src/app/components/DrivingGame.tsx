@@ -1406,22 +1406,35 @@ export const DrivingGame = ({ onBack, studySelection }: Props) => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
       drawRoad(ctx, roadOffsetRef.current);
 
-      // Wind and speed lines replace roadside trees so the focus stays on motion.
-      for (let i = 0; i < 18; i++) {
-        const y = (roadOffsetRef.current * (2.2 + (i % 3) * 0.35) + i * 38) % (CANVAS_H + 70) - 35;
-        const lineLength = 18 + (i % 4) * 9 + (boostActiveRef.current ? 14 : 0);
-        const leftX = 14 + (i % 5) * 8;
-        const rightX = CANVAS_W - 14 - (i % 5) * 8;
-        const alpha = 0.22 + (i % 4) * 0.08;
+      // Vertical liquid wind curves on both sides create forward motion without cluttering the road.
+      for (let i = 0; i < 16; i++) {
+        const y = (roadOffsetRef.current * (2.5 + (i % 4) * 0.35) + i * 44) % (CANVAS_H + 90) - 45;
+        const height = 34 + (i % 4) * 11 + (boostActiveRef.current ? 18 : 0);
+        const curve = 7 + (i % 5) * 2.5;
+        const leftX = 16 + (i % 4) * 12;
+        const rightX = CANVAS_W - 16 - (i % 4) * 12;
+        const alpha = 0.2 + (i % 5) * 0.07;
         ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-        ctx.lineWidth = i % 3 === 0 ? 3 : 2;
+        ctx.lineWidth = i % 3 === 0 ? 3.5 : 2.25;
         ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         ctx.beginPath();
         ctx.moveTo(leftX, y);
-        ctx.lineTo(leftX + lineLength, y + 8);
+        ctx.bezierCurveTo(leftX + curve, y + height * 0.25, leftX - curve, y + height * 0.62, leftX + curve * 0.35, y + height);
         ctx.moveTo(rightX, y);
-        ctx.lineTo(rightX - lineLength, y + 8);
+        ctx.bezierCurveTo(rightX - curve, y + height * 0.25, rightX + curve, y + height * 0.62, rightX - curve * 0.35, y + height);
         ctx.stroke();
+
+        if (i % 4 === 0) {
+          ctx.globalAlpha = alpha * 0.75;
+          ctx.beginPath();
+          ctx.moveTo(leftX + 15, y + 10);
+          ctx.bezierCurveTo(leftX + 24, y + 22, leftX + 10, y + 38, leftX + 18, y + 52);
+          ctx.moveTo(rightX - 15, y + 10);
+          ctx.bezierCurveTo(rightX - 24, y + 22, rightX - 10, y + 38, rightX - 18, y + 52);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
       }
 
       // Objects

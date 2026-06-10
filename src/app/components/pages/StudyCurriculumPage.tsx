@@ -7,6 +7,7 @@ import {
   Car,
   CheckCircle2,
   ClipboardCheck,
+  FileQuestion,
   GraduationCap,
   Layers,
   Library,
@@ -34,7 +35,7 @@ type StudyCurriculumPageProps = {
 };
 
 const isCurriculumId = (value?: string): value is StudyCurriculumId =>
-  value === 'HKDSE_DNT' || value === 'IB_DESIGN' || value === 'A_LEVEL_DT';
+  value === 'HKDSE_DNT' || value === 'IB_DESIGN' || value === 'IGCSE_DT' || value === 'A_LEVEL_DT';
 
 export const StudyCurriculumPage = ({ activeTopic, onNavigate }: StudyCurriculumPageProps) => {
   const { t } = useLanguage();
@@ -84,18 +85,18 @@ export const StudyCurriculumPage = ({ activeTopic, onNavigate }: StudyCurriculum
               <h1 className="mt-4 text-3xl font-black tracking-tight text-[#2C2A26] md:text-5xl">Study Curriculum</h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6B665E] md:text-base">
                 {t(
-                  '先選擇你的課程，然後進入對應年級或級別的知識儀表板。這裡不混合三個課程的內容。',
+                  '先選擇你的課程，然後進入對應年級或級別的知識儀表板。這裡不混合不同課程的內容。',
                   'Choose one curriculum first, then enter the matching year or level dashboard. Content stays separated by curriculum.',
                 )}
               </p>
             </div>
             <div className="rounded-2xl bg-[#F9F8F6] px-4 py-3 text-sm font-bold text-[#6B665E]">
-              {t('三個清晰路徑', 'Three clear pathways')}
+              {studyCurricula.length} {t('個清晰路徑', 'clear pathways')}
             </div>
           </div>
         </section>
 
-        <section className="grid gap-5 lg:grid-cols-3">
+        <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {studyCurricula.map((curriculum) => (
             <motion.button
               key={curriculum.id}
@@ -249,7 +250,7 @@ export const StudyCurriculumPage = ({ activeTopic, onNavigate }: StudyCurriculum
         ))}
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-4">
         <button
           type="button"
           onClick={() => onNavigate('fun_learning', makeStudySelection(selectedCurriculumId, selectedLevelId, 'quiz'))}
@@ -276,6 +277,15 @@ export const StudyCurriculumPage = ({ activeTopic, onNavigate }: StudyCurriculum
           <ClipboardCheck className="h-7 w-7" />
           <div className="mt-3 text-xl font-black">Project Support</div>
           <div className="mt-1 text-sm text-white/85">{selectedLevel.projectSupport.length} project tools and evidence prompts.</div>
+        </button>
+        <button
+          type="button"
+          onClick={() => onNavigate('past_papers', selection)}
+          className="rounded-2xl bg-[#CCA068] p-5 text-left font-bold text-white shadow-sm hover:bg-[#B98F55]"
+        >
+          <FileQuestion className="h-7 w-7" />
+          <div className="mt-3 text-xl font-black">Past Paper Exercise</div>
+          <div className="mt-1 text-sm text-white/85">Matched QP/MS revision with typed-answer checking.</div>
         </button>
       </section>
 

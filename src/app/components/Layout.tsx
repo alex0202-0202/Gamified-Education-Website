@@ -24,6 +24,11 @@ import {
   LogOut,
   Images,
   Factory,
+  FileQuestion,
+  CalendarCheck,
+  UploadCloud,
+  ClipboardCheck,
+  Megaphone,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { motion } from 'motion/react';
@@ -92,6 +97,12 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
     if (selectedLevel !== 'IB') setLastDSELevel(selectedLevel as 'S1' | 'S2' | 'S3' | 'S4_S6');
     setSelectedLevel('IB');
     onNavigate('dashboard', 'IB_DESIGN');
+  };
+  const switchToIGCSE = () => {
+    onNavigate('dashboard', 'IGCSE_DT');
+  };
+  const switchToALevel = () => {
+    onNavigate('dashboard', 'A_LEVEL_DT');
   };
 
   // Navigation items mapping based on EDB Curriculum
@@ -219,6 +230,10 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
     source_metadata: 'Source / Reference Metadata',
     poster_library: '知識海報庫 (Poster Library)',
     cambridge_alevel_dt: 'Cambridge A Level D&T 9705',
+    design_booking: 'Design Teacher Booking',
+    dt_submission: 'DT Coursework Submission',
+    submission_dashboard: 'Submission Dashboard',
+    dt_classroom: 'DT Classroom Hub',
     materials_db: '材料資料庫 (Materials Database)',
     hkdse_resources: 'HKDSE 課程資源 (D&T / DAT 中一至中六)',
     resource_hub: '學習資源中心',
@@ -258,7 +273,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
         <div className="border-b border-[#E5E0D8] bg-[#FDFCFB] p-4 lg:p-6">
           <div className="flex items-center space-x-2 text-[#D5896F] mb-2">
             <GraduationCap className="w-6 h-6" />
-            <span className="text-xs font-bold uppercase tracking-widest">{t('HKDSE · IB · A Level', 'HKDSE · IB · A Level')}</span>
+            <span className="text-xs font-bold uppercase tracking-widest">{t('HKDSE · IB · IGCSE · A Level', 'HKDSE · IB · IGCSE · A Level')}</span>
           </div>
           <h1 className="text-xl font-bold tracking-tight text-[#2C2A26] leading-tight">
             Design Technology Lab<br/>
@@ -271,7 +286,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
           <div className="mb-2 text-[10px] font-black uppercase tracking-widest text-[#A8A29A]">
             {t('課程選擇', 'Curriculum')}
           </div>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-4 gap-1.5">
             <button
               onClick={switchToDSE}
               className={clsx(
@@ -295,7 +310,18 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
               IB
             </button>
             <button
-              onClick={() => onNavigate('dashboard', 'A_LEVEL_DT')}
+              onClick={switchToIGCSE}
+              className={clsx(
+                'rounded-lg border px-2 py-2 text-xs font-black transition',
+                currentScreen === 'dashboard' && activeTopic?.startsWith('IGCSE_DT')
+                  ? 'border-[#CCA068]/50 bg-[#FFF8E6] text-[#A77811]'
+                  : 'border-[#E5E0D8] bg-white text-[#6B665E] hover:bg-[#F9F8F6]'
+              )}
+            >
+              IGCSE
+            </button>
+            <button
+              onClick={switchToALevel}
               className={clsx(
                 'rounded-lg border px-2 py-2 text-xs font-black transition',
                 currentScreen === 'dashboard' && activeTopic?.startsWith('A_LEVEL_DT')
@@ -303,7 +329,7 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                   : 'border-[#E5E0D8] bg-white text-[#6B665E] hover:bg-[#F9F8F6]'
               )}
             >
-              A Level
+              A-Level
             </button>
           </div>
         </div>
@@ -488,6 +514,68 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                 <Factory className="w-5 h-5 flex-shrink-0 text-[#6B9080]" />
                 <span>{t('Cambridge A Level D&T', 'Cambridge A Level D&T')}</span>
               </button>
+              <button
+                onClick={() => onNavigate('past_papers', activeTopic)}
+                className={clsx(
+                  'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
+                  currentScreen === 'past_papers'
+                    ? 'bg-[#F2EFE9] text-[#2C2A26] shadow-sm'
+                    : 'text-[#6B665E] hover:bg-[#F9F8F6]'
+                )}
+              >
+                <FileQuestion className="w-5 h-5 flex-shrink-0 text-[#CCA068]" />
+                <span>{t('歷屆試題練習', 'Past Paper Exercise')}</span>
+              </button>
+              <button
+                onClick={() => onNavigate('design_booking')}
+                className={clsx(
+                  'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
+                  currentScreen === 'design_booking'
+                    ? 'bg-[#F2EFE9] text-[#2C2A26] shadow-sm'
+                    : 'text-[#6B665E] hover:bg-[#F9F8F6]'
+                )}
+              >
+                <CalendarCheck className="w-5 h-5 flex-shrink-0 text-[#6B9080]" />
+                <span>{t('教師預約', 'Booking')}</span>
+              </button>
+              <button
+                onClick={() => onNavigate('dt_submission')}
+                className={clsx(
+                  'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
+                  currentScreen === 'dt_submission'
+                    ? 'bg-[#F2EFE9] text-[#2C2A26] shadow-sm'
+                    : 'text-[#6B665E] hover:bg-[#F9F8F6]'
+                )}
+              >
+                <UploadCloud className="w-5 h-5 flex-shrink-0 text-[#D5896F]" />
+                <span>{t('作品提交', 'Submission')}</span>
+              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => onNavigate('submission_dashboard')}
+                  className={clsx(
+                    'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
+                    currentScreen === 'submission_dashboard'
+                      ? 'bg-[#F2EFE9] text-[#2C2A26] shadow-sm'
+                      : 'text-[#6B665E] hover:bg-[#F9F8F6]'
+                  )}
+                >
+                  <ClipboardCheck className="w-5 h-5 flex-shrink-0 text-[#7B8FA1]" />
+                  <span>{t('提交管理', 'Submission Dashboard')}</span>
+                </button>
+              )}
+              <button
+                onClick={() => onNavigate('dt_classroom')}
+                className={clsx(
+                  'w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors text-sm font-medium text-left',
+                  currentScreen === 'dt_classroom'
+                    ? 'bg-[#F2EFE9] text-[#2C2A26] shadow-sm'
+                    : 'text-[#6B665E] hover:bg-[#F9F8F6]'
+                )}
+              >
+                <Megaphone className="w-5 h-5 flex-shrink-0 text-[#CCA068]" />
+                <span>{t('DT 課堂', 'Classroom')}</span>
+              </button>
               <div className="px-3 pt-4 text-xs font-bold uppercase tracking-wider text-[#A8A29A]">
                 {t('設計工具', 'Design Tools')}
               </div>
@@ -605,7 +693,17 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                 IB
               </button>
               <button
-                onClick={() => onNavigate('dashboard', 'A_LEVEL_DT')}
+                onClick={switchToIGCSE}
+                className={`px-4 py-1.5 rounded-full text-xs font-black transition-all ${
+                  currentScreen === 'dashboard' && activeTopic?.startsWith('IGCSE_DT')
+                    ? 'bg-[#CCA068] text-white shadow-sm'
+                    : 'text-[#8C857B] hover:text-[#4A4741]'
+                }`}
+              >
+                IGCSE
+              </button>
+              <button
+                onClick={switchToALevel}
                 className={`px-4 py-1.5 rounded-full text-xs font-black transition-all ${
                   currentScreen === 'dashboard' && activeTopic?.startsWith('A_LEVEL_DT')
                     ? 'bg-[#7B8FA1] text-white shadow-sm'
@@ -613,6 +711,59 @@ export const Layout = ({ children, currentScreen, activeTopic, onNavigate }: Lay
                 }`}
               >
                 A Level
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onNavigate('design_booking')}
+                className={clsx(
+                  'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black shadow-sm transition-colors',
+                  currentScreen === 'design_booking'
+                    ? 'border-[#6B9080]/40 bg-[#F1F7F2] text-[#557869]'
+                    : 'border-[#E5E0D8] bg-[#FAF9F6] text-[#6B665E] hover:bg-[#F2EFE9]'
+                )}
+              >
+                <CalendarCheck className="h-4 w-4" />
+                Booking
+              </button>
+              <button
+                onClick={() => onNavigate('dt_submission')}
+                className={clsx(
+                  'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black shadow-sm transition-colors',
+                  currentScreen === 'dt_submission'
+                    ? 'border-[#D5896F]/40 bg-[#FFF5F0] text-[#C4785E]'
+                    : 'border-[#E5E0D8] bg-[#FAF9F6] text-[#6B665E] hover:bg-[#F2EFE9]'
+                )}
+              >
+                <UploadCloud className="h-4 w-4" />
+                Submission
+              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => onNavigate('submission_dashboard')}
+                  className={clsx(
+                    'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black shadow-sm transition-colors',
+                    currentScreen === 'submission_dashboard'
+                      ? 'border-[#7B8FA1]/40 bg-[#F2F5F7] text-[#66788A]'
+                      : 'border-[#E5E0D8] bg-[#FAF9F6] text-[#6B665E] hover:bg-[#F2EFE9]'
+                  )}
+                >
+                  <ClipboardCheck className="h-4 w-4" />
+                  Dashboard
+                </button>
+              )}
+              <button
+                onClick={() => onNavigate('dt_classroom')}
+                className={clsx(
+                  'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black shadow-sm transition-colors',
+                  currentScreen === 'dt_classroom'
+                    ? 'border-[#CCA068]/40 bg-[#FFF9EC] text-[#9B7B46]'
+                    : 'border-[#E5E0D8] bg-[#FAF9F6] text-[#6B665E] hover:bg-[#F2EFE9]'
+                )}
+              >
+                <Megaphone className="h-4 w-4" />
+                Classroom
               </button>
             </div>
 

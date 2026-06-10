@@ -507,6 +507,16 @@ const ibMypFlashcards = [
 type BankId = 'dse-junior' | 'dse-senior' | 'ib-myp' | 'ib-dp';
 type TopicDef = { id: string; label: { zh: string; en: string } };
 type FlashCard = { front: { zh: string; en: string }; back: { zh: string; en: string }; topicId?: string };
+const QUIZ_ROUND_SIZE = 15;
+
+const sampleQuestions = (questions: QuizQuestion[], count = QUIZ_ROUND_SIZE): QuizQuestion[] => {
+  const shuffled = [...questions];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled.slice(0, Math.min(count, shuffled.length));
+};
 
 const yearGroupDefs: { id: string; shortLabel: string; group: 'DSE' | 'IB MYP' | 'IB DP'; bank: BankId }[] = [
   { id: 'S1', shortLabel: 'S1', group: 'DSE', bank: 'dse-junior' },
@@ -755,6 +765,7 @@ const studyFlashcardToCard = (item: ReturnType<typeof getFlashcardsForLevel>[num
 const QuizMode = ({ questions, onComplete }: { questions: QuizQuestion[]; onComplete?: (score: number, total: number, xpEarned: number) => void }) => {
   const { t, isEnglish } = useLanguage();
   const { addXp } = useGame();
+  const [roundQuestions, setRoundQuestions] = useState(() => sampleQuestions(questions));
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -762,7 +773,7 @@ const QuizMode = ({ questions, onComplete }: { questions: QuizQuestion[]; onComp
   const [finished, setFinished] = useState(false);
   const [showExplain, setShowExplain] = useState(false);
 
-  const q = questions[current];
+  const q = roundQuestions[current];
 
   const pick = (val: { zh: string; en: string }) => isEnglish ? val.en : val.zh;
 
@@ -777,11 +788,11 @@ const QuizMode = ({ questions, onComplete }: { questions: QuizQuestion[]; onComp
   };
 
   const next = () => {
-    if (current + 1 >= questions.length) {
+    if (current + 1 >= roundQuestions.length) {
       const finalScore = scoreRef.current;
       setFinished(true);
       addXp(finalScore * 15);
-      onComplete?.(finalScore, questions.length, finalScore * 15);
+      onComplete?.(finalScore, roundQuestions.length, finalScore * 15);
     } else {
       setCurrent((c) => c + 1);
       setSelected(null);
@@ -794,18 +805,19 @@ const QuizMode = ({ questions, onComplete }: { questions: QuizQuestion[]; onComp
     setSelected(null);
     setScore(0);
     scoreRef.current = 0;
+    setRoundQuestions(sampleQuestions(questions));
     setFinished(false);
     setShowExplain(false);
   };
 
   if (finished) {
-    const pct = Math.round((score / questions.length) * 100);
+    const pct = Math.round((score / roundQuestions.length) * 100);
     return (
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
         <div className="text-6xl mb-4">{pct >= 80 ? '🏆' : pct >= 50 ? '🎯' : '📚'}</div>
         <h3 className="text-2xl font-bold text-[#2C2A26] mb-2">{t('測驗完成！', 'Quiz Complete!')}</h3>
         <div className="text-4xl font-black mb-2" style={{ color: pct >= 80 ? '#6B9080' : pct >= 50 ? '#CCA068' : '#D5896F' }}>
-          {score} / {questions.length}
+          {score} / {roundQuestions.length}
         </div>
         <p className="text-sm text-[#6B665E] mb-2">{pct}% {t('正確率', 'correct')}</p>
         <p className="text-xs text-[#D5896F] font-bold mb-6">+{score * 15} XP {t('已獲得', 'earned')}</p>
@@ -826,9 +838,9 @@ const QuizMode = ({ questions, onComplete }: { questions: QuizQuestion[]; onComp
       {/* Progress bar */}
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 h-2 bg-[#F2EFE9] rounded-full overflow-hidden">
-          <div className="h-full bg-[#D5896F] rounded-full transition-all duration-500" style={{ width: `${(current / questions.length) * 100}%` }} />
+          <div className="h-full bg-[#D5896F] rounded-full transition-all duration-500" style={{ width: `${(current / roundQuestions.length) * 100}%` }} />
         </div>
-        <span className="text-xs font-bold text-[#8C857B] whitespace-nowrap">{current + 1} / {questions.length}</span>
+        <span className="text-xs font-bold text-[#8C857B] whitespace-nowrap">{current + 1} / {roundQuestions.length}</span>
         <span className="text-xs font-bold text-[#6B9080] whitespace-nowrap">⭐ {score}</span>
       </div>
 
@@ -1008,6 +1020,7 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
 
   const handleQuizYGChange = (yg: string) => { setQuizYearGroup(yg); setQuizTopic('all'); setQuizPlaying(false); };
   const handleFlashYGChange = (yg: string) => { setFlashYearGroup(yg); setFlashTopic('all'); setFlashPlaying(false); };
+  const quizRoundCount = Math.min(QUIZ_ROUND_SIZE, activeQuizQuestions.length);
 
   const pick = (val: { zh: string; en: string }) => isEnglish ? val.en : val.zh;
 
@@ -1088,9 +1101,9 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-[#2C2A26]">{t('知識問答挑戰', 'Knowledge Quiz Challenge')}</h3>
-                  <p className="text-xs text-[#8C857B] truncate">{quizCurrLabel} · {activeQuizQuestions.length} {t('題', 'questions')}</p>
+                  <p className="text-xs text-[#8C857B] truncate">{quizCurrLabel} · {activeQuizQuestions.length} {t('題庫', 'question bank')} · {quizRoundCount} {t('題/次', 'per round')}</p>
                 </div>
-                <span className="text-xs font-black text-[#D5896F] bg-[#D5896F]/10 px-2 py-1 rounded-full flex-shrink-0">+{activeQuizQuestions.length * 15} XP</span>
+                <span className="text-xs font-black text-[#D5896F] bg-[#D5896F]/10 px-2 py-1 rounded-full flex-shrink-0">+{quizRoundCount * 15} XP</span>
               </div>
             </div>
 
@@ -1208,7 +1221,7 @@ export const FunLearning = ({ activeTopic, onNavigate }: Props) => {
                   <button onClick={() => setQuizPlaying(true)}
                     disabled={activeQuizQuestions.length === 0}
                     className="w-full py-3 bg-[#D5896F] text-white rounded-xl font-bold text-sm hover:bg-[#C4785E] transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-45">
-                    <Zap className="w-4 h-4" /> {t('開始挑戰', 'Start Challenge')} · {activeQuizQuestions.length} {t('題', 'Q')}
+                    <Zap className="w-4 h-4" /> {t('開始挑戰', 'Start Challenge')} · {quizRoundCount}/{activeQuizQuestions.length} {t('題', 'Q')}
                   </button>
                 </div>
               )}

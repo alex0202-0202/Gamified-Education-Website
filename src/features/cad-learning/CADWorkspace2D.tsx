@@ -2,10 +2,12 @@ import { useRef, useState, type PointerEvent } from 'react';
 
 export type CadTool = 'select' | 'rectangle' | 'circle' | 'roundedRectangle' | 'slot' | 'line';
 export type CadShapeType = Exclude<CadTool, 'select'>;
+export type CadElevationView = 'north' | 'east' | 'south' | 'west' | 'top';
 
 export type CadShape = {
   id: string;
   type: CadShapeType;
+  view: CadElevationView;
   x: number;
   y: number;
   width: number;
@@ -25,8 +27,10 @@ type ActiveDrag = {
 type Props = {
   tool: CadTool;
   shapes: CadShape[];
+  activeElevation: CadElevationView;
   selectedShapeId?: string;
   onToolChange: (tool: CadTool) => void;
+  onElevationChange: (view: CadElevationView) => void;
   onAddShape: (shape: CadShapeType) => void;
   onSelectShape: (id: string) => void;
   onUpdateShape: (id: string, patch: Partial<CadShape>) => void;
@@ -42,13 +46,34 @@ const toolLabels: Array<{ id: CadTool; label: string }> = [
   { id: 'line', label: 'Line' },
 ];
 
+const elevationLabels: Array<{ id: CadElevationView; label: string; hint: string }> = [
+  { id: 'north', label: 'North', hint: 'front elevation' },
+  { id: 'east', label: 'East', hint: 'right elevation' },
+  { id: 'south', label: 'South', hint: 'back elevation' },
+  { id: 'west', label: 'West', hint: 'left elevation' },
+  { id: 'top', label: 'Top', hint: 'plan view' },
+];
+
 const snap = (value: number) => Math.round(value / 20) * 20;
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
-export const CADWorkspace2D = ({ tool, shapes, selectedShapeId, onToolChange, onAddShape, onSelectShape, onUpdateShape, onDeleteSelected }: Props) => {
+export const CADWorkspace2D = ({
+  tool,
+  shapes,
+  activeElevation,
+  selectedShapeId,
+  onToolChange,
+  onElevationChange,
+  onAddShape,
+  onSelectShape,
+  onUpdateShape,
+  onDeleteSelected,
+}: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [activeDrag, setActiveDrag] = useState<ActiveDrag | null>(null);
   const selectedShape = shapes.find((shape) => shape.id === selectedShapeId);
+  const visibleShapes = shapes.filter((shape) => shape.view === activeElevation);
+  const currentElevation = elevationLabels.find((view) => view.id === activeElevation) ?? elevationLabels[0];
 
   const getPoint = (event: PointerEvent<SVGElement>) => {
     const svg = svgRef.current;
@@ -93,7 +118,9 @@ export const CADWorkspace2D = ({ tool, shapes, selectedShapeId, onToolChange, on
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-lg font-bold text-[#2C2A26]">CAD-style 2D Workspace</h2>
-          <p className="text-sm text-[#6B665E]">Add 2D profiles, select them, then drag to move or use the corner handle to resize. Shapes snap to a 20 px grid.</p>
+          <p className="text-sm text-[#6B665E]">
+            Draw directly on the selected elevation. The same shapes are projected onto the matching face in the 3D preview.
+          </p>
         </div>
         <button
           type="button"
@@ -103,6 +130,22 @@ export const CADWorkspace2D = ({ tool, shapes, selectedShapeId, onToolChange, on
         >
           Delete selected
         </button>
+      </div>
+
+      <div className="mb-4 grid gap-2 sm:grid-cols-5">
+        {elevationLabels.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onElevationChange(item.id)}
+            className={`rounded-xl border px-3 py-2 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5896F] ${
+              activeElevation === item.id ? 'border-[#6B9080] bg-[#F1F7F2] text-[#2C2A26]' : 'border-[#E5E0D8] bg-[#F9F8F6] text-[#6B665E]'
+            }`}
+          >
+            <div className="text-sm font-black">{item.label}</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-[#8C857B]">{item.hint}</div>
+          </button>
+        ))}
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -142,7 +185,7 @@ export const CADWorkspace2D = ({ tool, shapes, selectedShapeId, onToolChange, on
       <svg
         ref={svgRef}
         role="img"
-        aria-label="Simple CAD grid with student-created shapes"
+        aria-label={`${currentElevation.label} CAD grid with student-created shapes`}
         viewBox="0 0 520 340"
         className="h-[340px] w-full touch-none rounded-xl border border-[#E5E0D8] bg-[#FCFBF8]"
         onPointerMove={updateDrag}
@@ -159,7 +202,8 @@ export const CADWorkspace2D = ({ tool, shapes, selectedShapeId, onToolChange, on
         <line x1="40" y1="300" x2="40" y2="30" stroke="#8C857B" strokeWidth="1.5" />
         <text x="492" y="306" fontSize="12" fill="#6B665E">X</text>
         <text x="33" y="26" fontSize="12" fill="#6B665E">Y</text>
-        {shapes.map((shape) => {
+        <text x="72" y="52" fontSize="14" fontWeight="700" fill="#6B9080">{currentElevation.label} / {currentElevation.hint}</text>
+        {visibleShapes.map((shape) => {
           const selected = shape.id === selectedShapeId;
           const common = {
             stroke: selected ? '#D5896F' : '#2C2A26',
@@ -195,7 +239,7 @@ export const CADWorkspace2D = ({ tool, shapes, selectedShapeId, onToolChange, on
       </svg>
 
       <p className="mt-3 text-xs leading-5 text-[#8C857B]">
-        Text fallback: this workspace represents a 2D CAD grid. Use the toolbar to add profiles, select a shape to edit dimensions, then use the preview panel to extrude it.
+        Text fallback: this workspace represents a 2D CAD grid for the {currentElevation.label.toLowerCase()} face. Every profile here is stored once and reused by the 3D preview.
       </p>
     </section>
   );

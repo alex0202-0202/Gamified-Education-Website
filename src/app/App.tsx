@@ -21,6 +21,11 @@ import { IBResourceDetail } from './components/IBResourceDetail';
 import { ProjectHub } from './components/ProjectHub';
 import { CambridgeALevelDTPage } from './components/pages/CambridgeALevelDTPage';
 import { StudyCurriculumPage } from './components/pages/StudyCurriculumPage';
+import { PastPaperExercisePage } from './components/pages/PastPaperExercisePage';
+import { DesignBookingPage } from './components/pages/DesignBookingPage';
+import { DTSubmissionPage } from './components/pages/DTSubmissionPage';
+import { SubmissionDashboardPage } from './components/pages/SubmissionDashboardPage';
+import { DTClassroomHubPage } from './components/pages/DTClassroomHubPage';
 import {
   DATCaseStudiesPage,
   DATSbaSupportPage,
@@ -91,6 +96,16 @@ function AppContent() {
         return <PosterLibraryPage onNavigate={handleNavigate} />;
       case 'cambridge_alevel_dt':
         return <CambridgeALevelDTPage onNavigate={handleNavigate} />;
+      case 'past_papers':
+        return <PastPaperExercisePage activeTopic={activeTopic} onNavigate={handleNavigate} />;
+      case 'design_booking':
+        return <DesignBookingPage onNavigate={handleNavigate} />;
+      case 'dt_submission':
+        return <DTSubmissionPage onNavigate={handleNavigate} />;
+      case 'submission_dashboard':
+        return <SubmissionDashboardPage onNavigate={handleNavigate} />;
+      case 'dt_classroom':
+        return <DTClassroomHubPage onNavigate={handleNavigate} />;
       case 'dashboard':
         return <StudyCurriculumPage onNavigate={handleNavigate} activeTopic={activeTopic} />;
       case 'legacy_dashboard':

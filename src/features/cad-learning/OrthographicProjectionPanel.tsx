@@ -3,7 +3,7 @@ import { Box, Ruler, Shapes } from 'lucide-react';
 import { orthographicPracticeTasks, orthographicViewGuides, type OrthographicViewId } from '../../data/design-skills/orthographicProjection';
 import { getPosterResources } from '../../data/design-skills/posterResources';
 import { PosterResourceGrid } from '../../app/components/PosterResourceGrid';
-import { CADWorkspace2D, type CadShape, type CadShapeType, type CadTool } from './CADWorkspace2D';
+import { CADWorkspace2D, type CadElevationView, type CadShape, type CadShapeType, type CadTool } from './CADWorkspace2D';
 import { ModelPreview3D } from './ModelPreview3D';
 import { SectionViewPanel } from './SectionViewPanel';
 import { ViewSelector } from './ViewSelector';
@@ -25,22 +25,21 @@ const orthographicPosters = getPosterResources([
 export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
   const [activeView, setActiveView] = useState<OrthographicViewId>('isometric');
   const [tool, setTool] = useState<CadTool>('select');
+  const [activeElevation, setActiveElevation] = useState<CadElevationView>('north');
   const [shapeCounter, setShapeCounter] = useState(3);
   const [selectedShapeId, setSelectedShapeId] = useState<string | undefined>('shape-1');
   const [dimensions, setDimensions] = useState({ width: 80, depth: 60, height: 50 });
   const [rotation, setRotation] = useState(0);
   const [cutPosition, setCutPosition] = useState(50);
-  const [extrudedShapeId, setExtrudedShapeId] = useState<string | undefined>('shape-1');
   const [extrudeMessage, setExtrudeMessage] = useState('');
   const [shapes, setShapes] = useState<CadShape[]>([
-    { id: 'shape-1', type: 'rectangle', x: 120, y: 110, width: 120, height: 80 },
-    { id: 'shape-2', type: 'circle', x: 300, y: 100, width: 80, height: 80 },
-    { id: 'shape-3', type: 'line', x: 130, y: 240, width: 160, height: 80 },
+    { id: 'shape-1', type: 'rectangle', view: 'north', x: 120, y: 110, width: 120, height: 80 },
+    { id: 'shape-2', type: 'circle', view: 'east', x: 300, y: 100, width: 80, height: 80 },
+    { id: 'shape-3', type: 'line', view: 'top', x: 130, y: 240, width: 160, height: 80 },
   ]);
 
-  const selectedShape = shapes.find((shape) => shape.id === selectedShapeId);
-  const extrudedShape = shapes.find((shape) => shape.id === extrudedShapeId) ?? selectedShape;
   const activeGuide = useMemo(() => orthographicViewGuides.find((view) => view.id === activeView) ?? orthographicViewGuides[0], [activeView]);
+  const activeElevationShapes = shapes.filter((shape) => shape.view === activeElevation);
 
   const addShape = (type: CadShapeType) => {
     const nextId = `shape-${shapeCounter + 1}`;
@@ -49,6 +48,7 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
     const next: CadShape = {
       id: nextId,
       type,
+      view: activeElevation,
       x: Math.min(380, offset),
       y: Math.min(240, offset),
       width: type === 'line' ? 120 : 80,
@@ -60,7 +60,6 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
 
   const deleteSelected = () => {
     setShapes((current) => current.filter((shape) => shape.id !== selectedShapeId));
-    if (extrudedShapeId === selectedShapeId) setExtrudedShapeId(undefined);
     setSelectedShapeId(undefined);
   };
 
@@ -71,6 +70,12 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
   const updateDimension = (key: 'width' | 'depth' | 'height', value: number) => {
     const safeValue = Math.max(10, Math.min(200, value));
     setDimensions((current) => ({ ...current, [key]: safeValue }));
+  };
+
+  const changeElevation = (view: CadElevationView) => {
+    setActiveElevation(view);
+    const existingShape = shapes.find((shape) => shape.view === view);
+    setSelectedShapeId(existingShape?.id);
   };
 
   return (
@@ -99,15 +104,19 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
         <CADWorkspace2D
           tool={tool}
           shapes={shapes}
+          activeElevation={activeElevation}
           selectedShapeId={selectedShapeId}
           onToolChange={setTool}
+          onElevationChange={changeElevation}
           onAddShape={addShape}
           onSelectShape={setSelectedShapeId}
           onUpdateShape={updateShape}
           onDeleteSelected={deleteSelected}
         />
         <ModelPreview3D
-          selectedShape={extrudedShape}
+          shapes={shapes}
+          selectedShapeId={selectedShapeId}
+          activeElevation={activeElevation}
           activeView={activeView}
           width={dimensions.width}
           depth={dimensions.depth}
@@ -156,17 +165,20 @@ export const OrthographicProjectionPanel = ({ onNavigate }: Props) => {
             type="button"
             onClick={() => {
               if (!selectedShapeId) {
-                setExtrudeMessage('Select or create a 2D profile first.');
+                setExtrudeMessage('Select or create a 2D profile on the active elevation first.');
                 return;
               }
-              setExtrudedShapeId(selectedShapeId);
-              setExtrudeMessage('Selected profile is now active in the 3D extrusion preview.');
+              const selected = shapes.find((shape) => shape.id === selectedShapeId);
+              setExtrudeMessage(selected ? `${selected.type} on ${selected.view.toUpperCase()} is already synced to the 3D preview.` : 'Select a shape first.');
             }}
             className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#6B9080] px-4 py-2 text-sm font-bold text-white"
           >
-            <Box className="h-4 w-4" /> Extrude selected profile
+            <Box className="h-4 w-4" /> Check synced 3D profile
           </button>
           {extrudeMessage && <p className="mt-3 rounded-lg bg-[#F9F8F6] p-3 text-xs leading-5 text-[#8C857B]">{extrudeMessage}</p>}
+          <div className="mt-3 rounded-lg bg-[#F9F8F6] p-3 text-xs leading-5 text-[#8C857B]">
+            Active elevation: <b>{activeElevation.toUpperCase()}</b>. Shapes on this drawing: <b>{activeElevationShapes.length}</b>. Total synced 3D markings: <b>{shapes.length}</b>.
+          </div>
         </article>
       </section>
 

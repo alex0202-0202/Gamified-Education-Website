@@ -1,4 +1,4 @@
-export type StudyCurriculumId = 'HKDSE_DNT' | 'IB_DESIGN' | 'A_LEVEL_DT';
+export type StudyCurriculumId = 'HKDSE_DNT' | 'IB_DESIGN' | 'IGCSE_DT' | 'A_LEVEL_DT';
 
 export type StudyCurriculum = {
   id: StudyCurriculumId;
@@ -388,6 +388,94 @@ const aLevelBlueprints: LevelBlueprint[] = [
   },
 ];
 
+const igcseLevelBlueprints: LevelBlueprint[] = [
+  {
+    id: 'igcse-common',
+    label: 'Common Content',
+    yearGroup: 'IGCSE Core',
+    summary: 'Cambridge IGCSE Design & Technology foundation knowledge for design thinking, communication, materials, safety, sustainability and manufacture.',
+    keyFocus: ['design process', 'product analysis', 'communication', 'materials', 'manufacturing processes', 'health and safety', 'sustainability', 'quality'],
+    projectSupport: ['common content revision map', 'design brief builder', 'product analysis checklist', 'safety and sustainability audit'],
+    revisionChecklist: ['I can analyse a product by function, user and material.', 'I can explain safe workshop choices.', 'I can select suitable materials and processes.', 'I can justify design improvements using evidence.'],
+    topics: [
+      topic('igcse-design-process', 'Design Process', 'Move from a design need to ideas, development, making, testing and evaluation.', ['design need', 'brief', 'specification', 'development', 'evaluation'], ['analyse needs', 'write criteria', 'test ideas'], ['improving a desk organiser']),
+      topic('igcse-communication', 'Design Communication', 'Use sketches, annotation, technical drawings and models to explain design proposals.', ['freehand sketching', 'orthographic projection', 'isometric', 'annotation'], ['draw views', 'add dimensions', 'communicate clearly'], ['annotated sketch of a storage product']),
+      topic('igcse-materials-core', 'Materials Overview', 'Compare woods, metals, polymers, papers/boards and composites for product design.', ['properties', 'uses', 'limitations', 'sustainability'], ['select material', 'compare properties', 'justify choices'], ['choosing card for packaging or plywood for structure']),
+      topic('igcse-processes-core', 'Manufacturing Processes', 'Choose suitable cutting, shaping, forming, joining and finishing processes.', ['cutting', 'forming', 'joining', 'finishing', 'assembly'], ['match process to material', 'plan manufacture', 'check quality'], ['laser cutting a card model']),
+      topic('igcse-safety-quality', 'Safety and Quality', 'Use risk assessment, PPE, safe tools and quality checks when making.', ['hazard', 'PPE', 'risk', 'quality control'], ['identify risks', 'choose controls', 'inspect outcomes'], ['checking a drilled hole against tolerance']),
+      topic('igcse-sustainability', 'Sustainability and Wider Impact', 'Consider environmental, social and economic impact through the product life cycle.', ['life cycle', 'waste', 'repair', 'recycling'], ['reduce impact', 'design for repair', 'evaluate choices'], ['replacing permanent glue with screws for repair']),
+    ],
+  },
+  {
+    id: 'igcse-project',
+    label: 'Component 2 Project',
+    yearGroup: 'Project',
+    summary: 'Coursework support for identifying a design problem, researching, developing, making and evaluating a practical design outcome.',
+    keyFocus: ['design problem', 'research', 'specification', 'idea development', 'realisation', 'testing', 'evaluation', 'portfolio evidence'],
+    projectSupport: ['project evidence timeline', 'research planner', 'development log', 'evaluation table builder'],
+    revisionChecklist: ['I can define a realistic design problem.', 'I can show research that affects decisions.', 'I can develop ideas through modelling.', 'I can test and evaluate the final product.'],
+    topics: [
+      topic('igcse-project-problem', 'Identify the Design Problem', 'Choose a realistic problem and explain the user, context and need.', ['client', 'user', 'context', 'problem'], ['define need', 'justify problem', 'state brief'], ['designing storage for a student workspace']),
+      topic('igcse-project-research', 'Research and Analysis', 'Collect useful product, user, material and process evidence.', ['primary research', 'secondary research', 'product analysis', 'user need'], ['collect evidence', 'analyse findings', 'link to criteria'], ['surveying users before designing']),
+      topic('igcse-project-specification', 'Specification and Criteria', 'Turn research into measurable requirements.', ['specification', 'constraint', 'success criteria', 'measurement'], ['write measurable criteria', 'justify targets', 'check feasibility'], ['must fit a 250 mm shelf space']),
+      topic('igcse-project-ideas', 'Idea Development', 'Generate, compare and improve design ideas.', ['concept', 'SCAMPER', 'iteration', 'annotation'], ['sketch alternatives', 'compare ideas', 'refine proposal'], ['three possible lamp bases']),
+      topic('igcse-project-making', 'Making and Realisation', 'Plan and make the selected product safely and accurately.', ['process plan', 'tools', 'materials', 'finish'], ['make accurately', 'record changes', 'work safely'], ['photo evidence of assembly stages']),
+      topic('igcse-project-evaluation', 'Testing and Evaluation', 'Test the product against the specification and propose improvements.', ['test method', 'data', 'feedback', 'improvement'], ['collect results', 'judge success', 'recommend changes'], ['load testing a shelf product']),
+    ],
+  },
+  {
+    id: 'igcse-materials',
+    label: 'Paper 3 Materials',
+    yearGroup: 'Materials',
+    summary: 'Focused revision for the renamed Paper 3 Materials route, covering material groups, properties, processing, joining and finishing.',
+    keyFocus: ['woods', 'metals', 'polymers', 'papers and boards', 'composites', 'material properties', 'processing', 'joining and finishing'],
+    projectSupport: ['materials selector', 'process selector', 'joining method selector', 'materials comparison table'],
+    revisionChecklist: ['I can compare material properties.', 'I can explain how materials are processed.', 'I can choose suitable joining methods.', 'I can discuss material sustainability.'],
+    topics: [
+      topic('igcse-woods-boards', 'Woods, Papers and Boards', 'Use timber, manufactured boards, card and paper products appropriately.', ['hardwood', 'softwood', 'plywood', 'MDF', 'card'], ['compare properties', 'choose board', 'select finish'], ['corrugated card packaging model']),
+      topic('igcse-metals', 'Metals', 'Compare ferrous, non-ferrous metals and alloys for strength, finish and corrosion resistance.', ['steel', 'aluminium', 'copper', 'brass', 'alloy'], ['select metal', 'consider corrosion', 'choose process'], ['aluminium bracket for lightness']),
+      topic('igcse-polymers', 'Polymers', 'Select thermoplastics, thermosets and flexible polymers for product needs.', ['acrylic', 'polypropylene', 'PVC', 'ABS', 'rubber'], ['compare polymers', 'choose forming process', 'evaluate recycling'], ['acrylic display stand']),
+      topic('igcse-composites-modern', 'Composite and Modern Materials', 'Understand combined materials and newer material choices.', ['composite', 'laminate', 'biodegradable polymer', 'smart material'], ['explain combined properties', 'match use', 'consider impact'], ['plywood as a layered composite']),
+      topic('igcse-material-processing', 'Processing Materials', 'Apply cutting, shaping, forming, moulding and finishing processes.', ['sawing', 'drilling', 'vacuum forming', 'injection moulding', 'polishing'], ['select process', 'describe stages', 'check accuracy'], ['vacuum forming a tray']),
+      topic('igcse-joining-finishing', 'Joining and Finishing', 'Choose permanent, temporary and finishing methods for materials.', ['adhesive', 'screws', 'rivets', 'welding', 'varnish'], ['match joint to load', 'prepare surfaces', 'improve appearance'], ['solvent cement for acrylic']),
+    ],
+  },
+  {
+    id: 'igcse-graphics',
+    label: 'Paper 4 Graphic Products',
+    yearGroup: 'Graphics',
+    summary: 'Graphic Products option support now assessed in Paper 4, with drawing, layout, packaging, presentation and CAD/CAM communication.',
+    keyFocus: ['graphic communication', 'packaging', 'developments and nets', 'surface graphics', 'presentation drawing', 'CAD/CAM', 'printing and finishing'],
+    projectSupport: ['packaging net builder', 'orthographic tool', 'graphics layout checklist', 'CAD/CAM workflow guide'],
+    revisionChecklist: ['I can draw accurate developments and nets.', 'I can use line, colour and typography for communication.', 'I can explain graphic product manufacture.', 'I can prepare CAD/CAM files clearly.'],
+    topics: [
+      topic('igcse-graphics-layout', 'Graphic Layout', 'Use visual hierarchy, alignment, colour and typography to communicate clearly.', ['layout', 'typography', 'colour', 'hierarchy'], ['compose layouts', 'choose type', 'improve readability'], ['label design for packaging']),
+      topic('igcse-nets-developments', 'Developments and Nets', 'Draw accurate nets for packaging and folded products.', ['net', 'fold line', 'glue tab', 'score line'], ['draw developments', 'add tabs', 'check assembly'], ['carton net with glue tabs']),
+      topic('igcse-packaging', 'Packaging Design', 'Design packaging that protects, informs and sells responsibly.', ['protection', 'information', 'branding', 'sustainability'], ['analyse packaging', 'reduce waste', 'select board'], ['recyclable phone accessory package']),
+      topic('igcse-presentation-drawing', 'Presentation Drawing', 'Use pictorial drawing and rendering to show final ideas.', ['isometric', 'perspective', 'rendering', 'material representation'], ['draw pictorial views', 'shade forms', 'show materials'], ['rendered marker drawing of a product']),
+      topic('igcse-graphics-cadcam', 'CAD/CAM for Graphics', 'Prepare accurate digital files for cutting, scoring, engraving and printing.', ['vector', 'layer', 'SVG', 'cut line', 'score line'], ['organise layers', 'check scale', 'export files'], ['laser-cut greeting card file']),
+      topic('igcse-print-finish', 'Printing and Finishing', 'Understand printed graphics, lamination, embossing and surface finishes.', ['printing', 'lamination', 'embossing', 'varnish'], ['choose finish', 'explain effect', 'consider cost'], ['laminated menu card']),
+    ],
+  },
+  {
+    id: 'igcse-full',
+    label: 'Full IGCSE Revision',
+    yearGroup: 'Full IGCSE',
+    summary: 'Whole-course revision for common content, Component 2 Project, Materials and Graphic Products after the 2028-2030 syllabus refresh.',
+    keyFocus: ['common content', 'Component 2 Project', 'Paper 1', 'Paper 3 Materials', 'Paper 4 Graphic Products', 'syllabus updates', 'exam technique', 'portfolio quality'],
+    projectSupport: ['full IGCSE revision planner', 'component checklist', 'exam command words', 'portfolio quality audit'],
+    revisionChecklist: ['I can separate Paper 1, Project, Materials and Graphic Products expectations.', 'I can answer with reasons and examples.', 'I can connect design decisions to evidence.', 'I can revise refreshed content without using the removed Systems and Control option as an option route.'],
+    topics: [
+      topic('igcse-update-overview', '2028-2030 Update Overview', 'Understand the refreshed syllabus structure and how assessment routes changed.', ['refreshed content', 'common content', 'removed Systems and Control option', 'assessment changes'], ['identify changes', 'revise correct route', 'avoid old option mistakes'], ['Graphic Products now assessed in Paper 4']),
+      topic('igcse-paper-1', 'Paper 1 Common Content', 'Prepare for revised question styles based on refreshed common content.', ['common content', 'design thinking', 'materials', 'processes'], ['answer short questions', 'apply knowledge', 'use examples'], ['explaining why a material suits a product']),
+      topic('igcse-component-2-full', 'Component 2 Project', 'Use the revised project criteria to build a clear, evidenced design folder.', ['research', 'development', 'realisation', 'evaluation'], ['organise evidence', 'justify decisions', 'test outcomes'], ['portfolio section showing improvement']),
+      topic('igcse-paper-3-materials', 'Paper 3 Materials', 'Revise material properties, processes, joining and finishing.', ['materials', 'properties', 'processing', 'joining'], ['compare materials', 'select process', 'explain limitations'], ['choosing polypropylene for a hinge']),
+      topic('igcse-paper-4-graphics', 'Paper 4 Graphic Products', 'Revise graphic communication, packaging, nets and production methods.', ['graphics', 'packaging', 'nets', 'CAD/CAM'], ['draw clearly', 'prepare files', 'justify layout'], ['packaging net with score lines']),
+      topic('igcse-exam-technique', 'IGCSE Exam Technique', 'Use command words, examples and clear design reasoning.', ['describe', 'explain', 'compare', 'evaluate'], ['structure answers', 'use evidence', 'avoid vague claims'], ['explain two advantages and one limitation']),
+    ],
+  },
+];
+
 function topic(
   id: string,
   title: string,
@@ -449,6 +537,15 @@ export const studyCurricula: StudyCurriculum[] = [
     ibLevelBlueprints,
   ),
   makeCurriculum(
+    'IGCSE_DT',
+    'IGCSE D&T',
+    'Cambridge IGCSE Design & Technology 0445',
+    'Core + Project · Materials and Graphic Products',
+    'A Cambridge IGCSE pathway covering refreshed common content, Component 2 Project, Paper 3 Materials and Paper 4 Graphic Products.',
+    'IG',
+    igcseLevelBlueprints,
+  ),
+  makeCurriculum(
     'A_LEVEL_DT',
     'A Level D&T',
     'Cambridge International AS & A Level Design & Technology 9705',
@@ -462,6 +559,7 @@ export const studyCurricula: StudyCurriculum[] = [
 const allBlueprints: Record<StudyCurriculumId, LevelBlueprint[]> = {
   HKDSE_DNT: hkdseLevelBlueprints,
   IB_DESIGN: ibLevelBlueprints,
+  IGCSE_DT: igcseLevelBlueprints,
   A_LEVEL_DT: aLevelBlueprints,
 };
 
@@ -588,7 +686,14 @@ const makeQuestionsForLevel = (curriculum: StudyCurriculumId, level: CurriculumL
       options,
       correctAnswer: template.correct,
       explanation: template.explanation,
-      examLink: curriculum === 'A_LEVEL_DT' ? 'Cambridge 9705 AO1-AO4' : curriculum === 'IB_DESIGN' ? 'IB Design criteria' : 'HKDSE D&T/DAT learning outcome',
+      examLink:
+        curriculum === 'A_LEVEL_DT'
+          ? 'Cambridge 9705 AO1-AO4'
+          : curriculum === 'IGCSE_DT'
+            ? 'Cambridge IGCSE 0445 assessment'
+            : curriculum === 'IB_DESIGN'
+              ? 'IB Design criteria'
+              : 'HKDSE D&T/DAT learning outcome',
     };
   });
 };
@@ -641,7 +746,7 @@ export const studyFlashcards: TerminologyFlashcard[] = studyCurricula.flatMap((c
 export const parseStudySelection = (selection?: string): { curriculumId: StudyCurriculumId; levelId: string; mode?: string } | null => {
   if (!selection) return null;
   const [curriculumId, levelId, mode] = selection.split(':');
-  if (curriculumId !== 'HKDSE_DNT' && curriculumId !== 'IB_DESIGN' && curriculumId !== 'A_LEVEL_DT') return null;
+  if (curriculumId !== 'HKDSE_DNT' && curriculumId !== 'IB_DESIGN' && curriculumId !== 'IGCSE_DT' && curriculumId !== 'A_LEVEL_DT') return null;
   if (!getStudyLevel(curriculumId, levelId)) return null;
   return { curriculumId, levelId, mode };
 };
