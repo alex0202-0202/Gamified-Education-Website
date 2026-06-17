@@ -30,15 +30,19 @@ import {
   DATCaseStudiesPage,
   DATSbaSupportPage,
   DATThematicResourcesPage,
+  CurriculumComparisonPage,
   EDBJuniorDesignTechnologyPage,
+  HKDSEDATPage,
   IBCaseStudiesPage,
   IBCurrent2026Page,
+  IBDesignTechnologyPage,
   IBMypDesignPage,
   IBIASupportPage,
   IBNew2027Page,
   IBResearchForDesignPage,
   PosterLibraryPage,
   SourceMetadataPage,
+  TeacherResourceHub,
 } from './components/pages/CurriculumPages';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -76,8 +80,12 @@ function AppContent() {
         return <DATCaseStudiesPage activeTopic={activeTopic} onNavigate={handleNavigate} />;
       case 'hkdse_sba_support':
         return <DATSbaSupportPage />;
+      case 'hkdse_dat':
+        return <HKDSEDATPage onNavigate={handleNavigate} />;
       case 'edb_junior_dt':
         return <EDBJuniorDesignTechnologyPage activeTopic={activeTopic} onNavigate={handleNavigate} />;
+      case 'ib_design_technology':
+        return <IBDesignTechnologyPage onNavigate={handleNavigate} />;
       case 'ib_myp_design':
         return <IBMypDesignPage />;
       case 'ib_current_2026':
@@ -90,6 +98,10 @@ function AppContent() {
         return <IBCaseStudiesPage activeTopic={activeTopic} onNavigate={handleNavigate} />;
       case 'ib_research_for_design':
         return <IBResearchForDesignPage />;
+      case 'curriculum_comparison':
+        return <CurriculumComparisonPage />;
+      case 'teacher_resource_hub':
+        return <TeacherResourceHub onNavigate={handleNavigate} />;
       case 'source_metadata':
         return <SourceMetadataPage />;
       case 'poster_library':

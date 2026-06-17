@@ -7,6 +7,7 @@ import {
   Car,
   CheckCircle2,
   ClipboardCheck,
+  ExternalLink,
   FileQuestion,
   GraduationCap,
   Layers,
@@ -19,6 +20,7 @@ import {
 import {
   getFlashcardsForLevel,
   getQuizQuestionsForLevel,
+  getResourceGuidesForCurriculum,
   getStudyCurriculum,
   getStudyLevel,
   getTopicsForLevel,
@@ -64,6 +66,7 @@ export const StudyCurriculumPage = ({ activeTopic, onNavigate }: StudyCurriculum
   const topics = selectedCurriculumId && selectedLevelId ? getTopicsForLevel(selectedCurriculumId, selectedLevelId) : [];
   const questions = selectedCurriculumId && selectedLevelId ? getQuizQuestionsForLevel(selectedCurriculumId, selectedLevelId) : [];
   const flashcards = selectedCurriculumId && selectedLevelId ? getFlashcardsForLevel(selectedCurriculumId, selectedLevelId) : [];
+  const resourceGuides = selectedCurriculumId ? getResourceGuidesForCurriculum(selectedCurriculumId) : [];
 
   const dashboardMetrics = useMemo(() => [
     { label: t('主題', 'Topics'), value: topics.length, icon: Layers },
@@ -287,6 +290,39 @@ export const StudyCurriculumPage = ({ activeTopic, onNavigate }: StudyCurriculum
           <div className="mt-3 text-xl font-black">Past Paper Exercise</div>
           <div className="mt-1 text-sm text-white/85">Matched QP/MS revision with typed-answer checking.</div>
         </button>
+      </section>
+
+      <section className="rounded-3xl border border-[#E5E0D8] bg-white p-5 shadow-sm md:p-6">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="text-xs font-black uppercase tracking-widest text-[#8C857B]">Official Sources + Books</div>
+            <h2 className="mt-1 text-2xl font-black text-[#2C2A26]">Curriculum Resource Guide</h2>
+          </div>
+          <div className="rounded-full bg-[#F2EFE9] px-3 py-1 text-xs font-black text-[#6B665E]">
+            {resourceGuides.length} checked resources
+          </div>
+        </div>
+        <div className="grid gap-3 md:grid-cols-3">
+          {resourceGuides.map((resource) => (
+            <a
+              key={resource.id}
+              href={resource.url}
+              target="_blank"
+              rel="noreferrer"
+              className="group rounded-2xl border border-[#E5E0D8] bg-[#FDFCFB] p-4 transition-colors hover:border-[#D5896F]/60 hover:bg-white"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <span className="rounded-full bg-[#EEF6FF] px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-[#356487]">
+                  {resource.sourceType}
+                </span>
+                <ExternalLink className="h-4 w-4 text-[#8C857B] group-hover:text-[#D5896F]" />
+              </div>
+              <h3 className="mt-3 text-sm font-black text-[#2C2A26]">{resource.title}</h3>
+              <p className="mt-1 text-xs font-bold text-[#8C857B]">{resource.publisher}</p>
+              <p className="mt-3 text-sm leading-6 text-[#6B665E]">{resource.note}</p>
+            </a>
+          ))}
+        </div>
       </section>
 
       <section className="rounded-3xl border border-[#E5E0D8] bg-white p-5 shadow-sm md:p-6">

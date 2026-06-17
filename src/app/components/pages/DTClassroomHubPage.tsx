@@ -268,7 +268,7 @@ export const DTClassroomHubPage = ({ onNavigate }: Props) => {
     {
       title: 'Lesson',
       items: [
-        { label: 'Start DT Lesson', icon: Sparkles, action: () => { setActiveTab('modules'); setStatusMessage('Lesson view opened. Live lesson hosting is planned for backend integration.'); } },
+        { label: 'Start DT Lesson', icon: Sparkles, action: () => { setActiveTab('modules'); setStatusMessage('Modules opened. Select a lesson card to start from objectives, tasks and resources.'); } },
         { label: 'Schedule Workshop', icon: CalendarPlus, action: () => { setActiveTab('calendar'); setStatusMessage('Calendar opened. Use this area to plan workshop sessions.'); } },
       ],
     },
@@ -284,9 +284,9 @@ export const DTClassroomHubPage = ({ onNavigate }: Props) => {
     {
       title: 'Resources',
       items: [
-        { label: 'Add Resource', icon: Paperclip, action: () => { setActiveTab('modules'); setStatusMessage('Resource upload needs backend file storage; local demo shows module resources.'); } },
-        { label: 'Add Goal', icon: Target, action: () => { setActiveTab('modules'); setStatusMessage('Goal tracking placeholder opened.'); } },
-        { label: 'Post Reflection', icon: PenTool, action: () => { setActiveTab('history'); setStatusMessage('Reflection log placeholder opened in History.'); } },
+        { label: 'Add Resource', icon: Paperclip, action: () => { setShowComposer(true); setForm((current) => ({ ...current, type: 'LESSON_PREPARATION', title: 'Resource: ', body: 'Open this resource before the next DT lesson: ', sendEmail: false })); setStatusMessage('Notice composer opened. Add a resource link in the attachment field.'); } },
+        { label: 'Add Goal', icon: Target, action: () => { setShowTaskCreator(true); setTaskForm((current) => ({ ...current, title: 'Portfolio goal: ', category: 'Goal', type: 'PORTFOLIO', details: 'Write the design goal, success criteria and evidence students should upload.' })); } },
+        { label: 'Post Reflection', icon: PenTool, action: () => { setShowComposer(true); setForm((current) => ({ ...current, type: 'LESSON_PREPARATION', priority: 'LOW', title: 'Reflection: ', body: 'Write one thing you improved, one test result, and one next step.' })); setStatusMessage('Reflection notice composer opened.'); } },
       ],
     },
   ];

@@ -62,6 +62,16 @@ export type TerminologyFlashcard = {
   relatedSkills: string[];
 };
 
+export type CurriculumResourceGuide = {
+  id: string;
+  curriculum: StudyCurriculumId;
+  title: string;
+  sourceType: 'Official source' | 'Published resource' | 'Past papers' | 'School guidance';
+  publisher: string;
+  url: string;
+  note: string;
+};
+
 type LevelBlueprint = Omit<CurriculumLevel, 'topicIds'> & {
   topics: Omit<CurriculumTopic, 'curriculum' | 'levelId'>[];
 };
@@ -556,6 +566,117 @@ export const studyCurricula: StudyCurriculum[] = [
   ),
 ];
 
+export const curriculumResourceGuides: CurriculumResourceGuide[] = [
+  {
+    id: 'hkdse-edb-tech-resources',
+    curriculum: 'HKDSE_DNT',
+    title: 'EDB Technology Education learning and teaching resources',
+    sourceType: 'Official source',
+    publisher: 'Education Bureau, HKSAR',
+    url: 'https://www.edb.gov.hk/en/curriculum-development/kla/technology-edu/resources/tech-subjects/resources.html',
+    note: 'Use as the main official reference for S1-S3 D&T and S4-S6 DAT resource scope.',
+  },
+  {
+    id: 'hkdse-dat-guide',
+    curriculum: 'HKDSE_DNT',
+    title: 'DAT Curriculum and Assessment Guide (S4-S6)',
+    sourceType: 'Official source',
+    publisher: 'Education Bureau, HKSAR',
+    url: 'https://www.edb.gov.hk/attachment/en/curriculum-development/kla/technology-edu/curriculum-doc/DAT_CAGuide_e_2015.pdf',
+    note: 'Use for senior DAT curriculum, assessment, project evidence and examination alignment.',
+  },
+  {
+    id: 'hkdse-school-text-guidance',
+    curriculum: 'HKDSE_DNT',
+    title: 'School selected D&T / DAT class texts',
+    sourceType: 'School guidance',
+    publisher: 'School / teacher selected',
+    url: 'https://www.edb.gov.hk/en/curriculum-development/kla/technology-edu/resources/tech-subjects/resources.html',
+    note: 'No single public official textbook is specified here. Use EDB documents plus books adopted by the school.',
+  },
+  {
+    id: 'ib-myp-design-official',
+    curriculum: 'IB_DESIGN',
+    title: 'IB MYP Design official subject page',
+    sourceType: 'Official source',
+    publisher: 'International Baccalaureate',
+    url: 'https://www.ibo.org/programmes/middle-years-programme/curriculum/design/',
+    note: 'Use for the MYP Design subject identity, design cycle and inquiry-to-evaluation framing.',
+  },
+  {
+    id: 'ib-dp-dt-official',
+    curriculum: 'IB_DESIGN',
+    title: 'IB DP Design Technology official subject page',
+    sourceType: 'Official source',
+    publisher: 'International Baccalaureate',
+    url: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/design-technology/',
+    note: 'Use for DP Design Technology course versions, subject brief links and official assessment direction.',
+  },
+  {
+    id: 'ib-dp-dt-ibid',
+    curriculum: 'IB_DESIGN',
+    title: 'IB Design Technology for the IB Diploma, third edition',
+    sourceType: 'Published resource',
+    publisher: 'IBID Press',
+    url: 'https://www.ibid.com.au/',
+    note: 'Publisher resource for the 2027 course cycle. Verify school adoption and licence before assigning it to students.',
+  },
+  {
+    id: 'igcse-0445-official',
+    curriculum: 'IGCSE_DT',
+    title: 'Cambridge IGCSE Design & Technology 0445 official page',
+    sourceType: 'Official source',
+    publisher: 'Cambridge International Education',
+    url: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-design-and-technology-0445/',
+    note: 'Use for current syllabus documents, specimen materials and qualification updates.',
+  },
+  {
+    id: 'igcse-0445-published-resources',
+    curriculum: 'IGCSE_DT',
+    title: 'Cambridge IGCSE Design & Technology 0445 published resources',
+    sourceType: 'Published resource',
+    publisher: 'Cambridge International Education',
+    url: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-design-and-technology-0445/published-resources/',
+    note: 'Cambridge lists the Collins 2026 Student’s Book for the updated 2028 syllabus support on this page.',
+  },
+  {
+    id: 'igcse-0445-past-papers',
+    curriculum: 'IGCSE_DT',
+    title: 'Cambridge IGCSE 0445 specimen and past paper practice',
+    sourceType: 'Past papers',
+    publisher: 'Cambridge International Education',
+    url: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-design-and-technology-0445/',
+    note: 'Use official question papers and mark schemes for revision. Do not expose file-code names to students in the UI.',
+  },
+  {
+    id: 'alevel-9705-official',
+    curriculum: 'A_LEVEL_DT',
+    title: 'Cambridge International AS & A Level Design & Technology 9705 official page',
+    sourceType: 'Official source',
+    publisher: 'Cambridge International Education',
+    url: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-design-and-technology-9705/',
+    note: 'Use for AS topics 1-12, A2 topics 13-18, assessment components and syllabus documents.',
+  },
+  {
+    id: 'alevel-9705-published-resources',
+    curriculum: 'A_LEVEL_DT',
+    title: 'Cambridge 9705 published resources page',
+    sourceType: 'Published resource',
+    publisher: 'Cambridge International Education',
+    url: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-design-and-technology-9705/published-resources/',
+    note: 'Cambridge currently does not list a published textbook on this qualification page, so use the syllabus, past papers and school-created notes as the safe baseline.',
+  },
+  {
+    id: 'alevel-9705-past-papers',
+    curriculum: 'A_LEVEL_DT',
+    title: 'Cambridge 9705 syllabus and past paper practice',
+    sourceType: 'Past papers',
+    publisher: 'Cambridge International Education',
+    url: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-design-and-technology-9705/',
+    note: 'Use official question papers and mark schemes for exam-style practice and AO1-AO4 alignment.',
+  },
+];
+
 const allBlueprints: Record<StudyCurriculumId, LevelBlueprint[]> = {
   HKDSE_DNT: hkdseLevelBlueprints,
   IB_DESIGN: ibLevelBlueprints,
@@ -767,3 +888,6 @@ export const getQuizQuestionsForLevel = (curriculumId: StudyCurriculumId, levelI
 
 export const getFlashcardsForLevel = (curriculumId: StudyCurriculumId, levelId: string) =>
   studyFlashcards.filter((card) => card.curriculum === curriculumId && card.levelId === levelId);
+
+export const getResourceGuidesForCurriculum = (curriculumId: StudyCurriculumId) =>
+  curriculumResourceGuides.filter((resource) => resource.curriculum === curriculumId);
